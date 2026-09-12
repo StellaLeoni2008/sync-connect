@@ -14,7 +14,7 @@ export const Route = createFileRoute("/_authenticated/you")({
 function You() {
   const { user } = Route.useRouteContext();
   const isGuest = Boolean((user as { is_anonymous?: boolean }).is_anonymous);
-  const [prefs, setPrefs] = useState({ strong_sync: true, mutual_sync: true, help_alert: true, resync: true, haptics: true });
+  const [prefs, setPrefs] = useState({ people_nearby: true, sync_requests: true, new_messages: true, nearby_events: true, haptics: true });
   const [name, setName] = useState("");
   const [tags, setTags] = useState({ hobbies: "", interests: "", can_help_with: "" });
   const [saved, setSaved] = useState(false);

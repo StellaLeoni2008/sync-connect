@@ -191,3 +191,14 @@
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; }
 }
+
+/* Radar + liveliness */
+@keyframes radar-sweep { from { transform: rotate(0deg) } to { transform: rotate(360deg) } }
+@keyframes radar-ring { 0% { opacity:.5; transform:scale(.35) } 80% { opacity:0 } 100% { opacity:0; transform:scale(1) } }
+@keyframes blip-in { 0% { opacity:0; transform:translate(-50%,-50%) scale(.5) } 100% { opacity:1; transform:translate(-50%,-50%) scale(1) } }
+@keyframes sync-success { 0% { transform:scale(.8); opacity:0 } 55% { transform:scale(1.06); opacity:1 } 100% { transform:scale(1); opacity:1 } }
+
+@utility animate-radar-sweep { animation: radar-sweep 6s linear infinite; }
+@utility animate-radar-ring { animation: radar-ring 3.2s ease-out infinite; }
+@utility animate-blip-in { animation: blip-in .45s cubic-bezier(.22,1,.36,1) both; }
+@utility animate-sync-success { animation: sync-success .6s cubic-bezier(.22,1,.36,1) both; }
