@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { supabase } from "@/integrations/supabase/client";
 import { useProximity, type Fix } from "@/hooks/use-proximity";
+import { vibrateSync } from "@/lib/haptics";
 import { DEFAULT_RADIUS_M, RADIUS_OPTIONS_M } from "@/lib/matching";
 import { activateSync, findNearbySyncs, stopSync, updatePresence } from "@/lib/sync.functions";
 
@@ -79,7 +80,11 @@ function SyncHome() {
       .order("created_at", { ascending: false })
       .limit(1)
       .maybeSingle();
-    setMatchId(data?.id ?? null);
+    const next = data?.id ?? null;
+    setMatchId((current) => {
+      if (next && next !== current) vibrateSync();
+      return next;
+    });
   }, [user.id]);
 
   // Keep presence fresh and re-run the nearby search while discovery is active.
