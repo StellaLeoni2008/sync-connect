@@ -16,6 +16,7 @@ import { Route as BandRouteImport } from './routes/band'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as AuthenticatedConnectionsRouteImport } from './routes/_authenticated/connections'
 import { Route as AuthenticatedDiscoveryRouteImport } from './routes/_authenticated/discovery'
+import { Route as AuthenticatedEditProfileRouteImport } from './routes/_authenticated/edit-profile'
 import { Route as AuthenticatedEventsRouteImport } from './routes/_authenticated/events'
 import { Route as AuthenticatedOnboardingRouteImport } from './routes/_authenticated/onboarding'
 import { Route as AuthenticatedSyncRouteImport } from './routes/_authenticated/sync'
@@ -63,6 +64,12 @@ const AuthenticatedDiscoveryRoute = AuthenticatedDiscoveryRouteImport.update({
   path: '/discovery',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedEditProfileRoute =
+  AuthenticatedEditProfileRouteImport.update({
+    id: '/edit-profile',
+    path: '/edit-profile',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedEventsRoute = AuthenticatedEventsRouteImport.update({
   id: '/events',
   path: '/events',
@@ -132,6 +139,7 @@ export interface FileRoutesByFullPath {
   '/reset-password': typeof ResetPasswordRoute
   '/connections': typeof AuthenticatedConnectionsRouteWithChildren
   '/discovery': typeof AuthenticatedDiscoveryRoute
+  '/edit-profile': typeof AuthenticatedEditProfileRoute
   '/events': typeof AuthenticatedEventsRouteWithChildren
   '/onboarding': typeof AuthenticatedOnboardingRoute
   '/sync': typeof AuthenticatedSyncRoute
@@ -150,6 +158,7 @@ export interface FileRoutesByTo {
   '/band': typeof BandRoute
   '/reset-password': typeof ResetPasswordRoute
   '/discovery': typeof AuthenticatedDiscoveryRoute
+  '/edit-profile': typeof AuthenticatedEditProfileRoute
   '/onboarding': typeof AuthenticatedOnboardingRoute
   '/sync': typeof AuthenticatedSyncRoute
   '/you': typeof AuthenticatedYouRoute
@@ -170,6 +179,7 @@ export interface FileRoutesById {
   '/reset-password': typeof ResetPasswordRoute
   '/_authenticated/connections': typeof AuthenticatedConnectionsRouteWithChildren
   '/_authenticated/discovery': typeof AuthenticatedDiscoveryRoute
+  '/_authenticated/edit-profile': typeof AuthenticatedEditProfileRoute
   '/_authenticated/events': typeof AuthenticatedEventsRouteWithChildren
   '/_authenticated/onboarding': typeof AuthenticatedOnboardingRoute
   '/_authenticated/sync': typeof AuthenticatedSyncRoute
@@ -191,6 +201,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/connections'
     | '/discovery'
+    | '/edit-profile'
     | '/events'
     | '/onboarding'
     | '/sync'
@@ -209,6 +220,7 @@ export interface FileRouteTypes {
     | '/band'
     | '/reset-password'
     | '/discovery'
+    | '/edit-profile'
     | '/onboarding'
     | '/sync'
     | '/you'
@@ -228,6 +240,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/_authenticated/connections'
     | '/_authenticated/discovery'
+    | '/_authenticated/edit-profile'
     | '/_authenticated/events'
     | '/_authenticated/onboarding'
     | '/_authenticated/sync'
@@ -298,6 +311,13 @@ declare module '@tanstack/react-router' {
       path: '/discovery'
       fullPath: '/discovery'
       preLoaderRoute: typeof AuthenticatedDiscoveryRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/edit-profile': {
+      id: '/_authenticated/edit-profile'
+      path: '/edit-profile'
+      fullPath: '/edit-profile'
+      preLoaderRoute: typeof AuthenticatedEditProfileRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/events': {
@@ -415,6 +435,7 @@ const AuthenticatedEventsRouteWithChildren =
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedConnectionsRoute: typeof AuthenticatedConnectionsRouteWithChildren
   AuthenticatedDiscoveryRoute: typeof AuthenticatedDiscoveryRoute
+  AuthenticatedEditProfileRoute: typeof AuthenticatedEditProfileRoute
   AuthenticatedEventsRoute: typeof AuthenticatedEventsRouteWithChildren
   AuthenticatedOnboardingRoute: typeof AuthenticatedOnboardingRoute
   AuthenticatedSyncRoute: typeof AuthenticatedSyncRoute
@@ -426,6 +447,7 @@ interface AuthenticatedRouteRouteChildren {
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedConnectionsRoute: AuthenticatedConnectionsRouteWithChildren,
   AuthenticatedDiscoveryRoute: AuthenticatedDiscoveryRoute,
+  AuthenticatedEditProfileRoute: AuthenticatedEditProfileRoute,
   AuthenticatedEventsRoute: AuthenticatedEventsRouteWithChildren,
   AuthenticatedOnboardingRoute: AuthenticatedOnboardingRoute,
   AuthenticatedSyncRoute: AuthenticatedSyncRoute,
