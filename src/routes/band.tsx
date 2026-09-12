@@ -26,7 +26,9 @@ export const Route = createFileRoute("/band")({
   component: Band,
 });
 
-const COLORS = [
+type BandColor = { id: string; name: string; tagline: string; swatch: string; img: string; special?: boolean };
+
+const COLORS: BandColor[] = [
   { id: "midnight", name: "Midnight", tagline: "Classic. Always works.", swatch: "#1A1C1E", img: midnight.url },
   { id: "sand", name: "Sand", tagline: "Minimal. Effortless. Anywhere.", swatch: "#D9CDBB", img: sand.url },
   { id: "rose", name: "Rose", tagline: "Bold. Friendly. Connected.", swatch: "#D4A3A6", img: rose.url },
