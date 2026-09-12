@@ -1,4 +1,4 @@
-import { Link, useRouterState } from "@tanstack/react-router";
+import { useRouterState } from "@tanstack/react-router";
 import { CalendarDays, Radio, UserRound, UsersRound } from "lucide-react";
 import type { ReactNode } from "react";
 import { SyncLogo } from "@/components/brand/sync-logo";
@@ -23,7 +23,7 @@ export function AppShell({ children, light = false }: { children: ReactNode; lig
         <nav className="fixed inset-x-0 bottom-0 z-20 mx-auto flex h-20 max-w-md items-center justify-around border-t border-border bg-background/95 px-2 backdrop-blur" aria-label="Primary navigation">
           {tabs.map(({ to, label, icon: Icon }) => {
             const active = pathname === to;
-            return <Link key={to} to={to} className="flex min-w-16 flex-col items-center gap-1 text-[.68rem] text-muted-foreground"><span className={active ? "flex h-9 w-9 items-center justify-center rounded-full bg-secondary text-foreground" : "flex h-9 w-9 items-center justify-center"}><Icon className="h-[18px] w-[18px]" strokeWidth={1.6} /></span><span className={active ? "text-foreground" : ""}>{label}</span></Link>;
+            return <a key={to} href={to} className="flex min-w-16 flex-col items-center gap-1 text-[.68rem] text-muted-foreground"><span className={active ? "flex h-9 w-9 items-center justify-center rounded-full bg-secondary text-foreground" : "flex h-9 w-9 items-center justify-center"}><Icon className="h-[18px] w-[18px]" strokeWidth={1.6} /></span><span className={active ? "text-foreground" : ""}>{label}</span></a>;
           })}
         </nav>
       </div>
