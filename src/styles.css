@@ -34,6 +34,8 @@
   --color-popover-foreground: var(--popover-foreground);
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-active: var(--primary-active);
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
   --color-muted: var(--muted);
@@ -60,6 +62,10 @@
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-signal: var(--signal);
+  --color-google: var(--google);
+  --color-google-hover: var(--google-hover);
+  --color-google-foreground: var(--google-foreground);
+  --color-google-border: var(--google-border);
   --color-ink: var(--ink);
   --color-graphite: var(--graphite);
   --color-elevated: var(--elevated);
@@ -74,8 +80,10 @@
   --card-foreground: oklch(0.18 0.004 260);
   --popover: oklch(0.982 0.003 85);
   --popover-foreground: oklch(0.18 0.004 260);
-  --primary: oklch(0.18 0.004 260);
-  --primary-foreground: oklch(0.97 0.003 85);
+  --primary: oklch(0.82 0.13 213);
+  --primary-hover: oklch(0.85 0.12 213);
+  --primary-active: oklch(0.72 0.16 240);
+  --primary-foreground: oklch(0.145 0.008 240);
   --secondary: oklch(0.925 0.004 85);
   --secondary-foreground: oklch(0.18 0.004 260);
   --muted: oklch(0.925 0.004 85);
@@ -88,6 +96,10 @@
   --input: oklch(0.18 0.004 260 / 12%);
   --ring: oklch(0.82 0.13 213);
   --signal: oklch(0.82 0.13 213);
+  --google: oklch(0.985 0.003 85);
+  --google-hover: oklch(0.96 0.004 85);
+  --google-foreground: oklch(0.18 0.004 260);
+  --google-border: oklch(0.18 0.004 260 / 12%);
   --ink: oklch(0.18 0.004 260);
   --graphite: oklch(0.22 0.008 240);
   --elevated: oklch(0.27 0.009 240);
@@ -113,8 +125,10 @@
   --card-foreground: oklch(0.97 0.003 85);
   --popover: oklch(0.22 0.008 240);
   --popover-foreground: oklch(0.97 0.003 85);
-  --primary: oklch(0.97 0.003 85);
-  --primary-foreground: oklch(0.15 0.008 240);
+  --primary: oklch(0.82 0.13 213);
+  --primary-hover: oklch(0.85 0.12 213);
+  --primary-active: oklch(0.72 0.16 240);
+  --primary-foreground: oklch(0.145 0.008 240);
   --secondary: oklch(0.27 0.009 240);
   --secondary-foreground: oklch(0.97 0.003 85);
   --muted: oklch(0.22 0.008 240);
@@ -127,6 +141,10 @@
   --input: oklch(1 0 0 / 12%);
   --ring: oklch(0.82 0.13 213);
   --signal: oklch(0.82 0.13 213);
+  --google: oklch(0.985 0.003 85);
+  --google-hover: oklch(0.96 0.004 85);
+  --google-foreground: oklch(0.18 0.004 260);
+  --google-border: oklch(1 0 0 / 14%);
   --ink: oklch(0.145 0.008 240);
   --graphite: oklch(0.22 0.008 240);
   --elevated: oklch(0.27 0.009 240);

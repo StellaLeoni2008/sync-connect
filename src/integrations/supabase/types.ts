@@ -103,6 +103,70 @@ export type Database = {
           },
         ]
       }
+      connection_location_shares: {
+        Row: {
+          accuracy: number | null
+          connection_id: string
+          expires_at: string | null
+          id: string
+          is_active: boolean
+          latitude: number
+          longitude: number
+          owner_user_id: string
+          recipient_user_id: string
+          started_at: string
+          updated_at: string
+        }
+        Insert: {
+          accuracy?: number | null
+          connection_id: string
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean
+          latitude: number
+          longitude: number
+          owner_user_id: string
+          recipient_user_id: string
+          started_at?: string
+          updated_at?: string
+        }
+        Update: {
+          accuracy?: number | null
+          connection_id?: string
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean
+          latitude?: number
+          longitude?: number
+          owner_user_id?: string
+          recipient_user_id?: string
+          started_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "connection_location_shares_connection_id_fkey"
+            columns: ["connection_id"]
+            isOneToOne: false
+            referencedRelation: "connections"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "connection_location_shares_owner_user_id_fkey"
+            columns: ["owner_user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "connection_location_shares_recipient_user_id_fkey"
+            columns: ["recipient_user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       connections: {
         Row: {
           connected_at: string
@@ -151,6 +215,68 @@ export type Database = {
             columns: ["user_b_id"]
             isOneToOne: false
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      conversation_members: {
+        Row: {
+          conversation_id: string
+          joined_at: string
+          user_id: string
+        }
+        Insert: {
+          conversation_id: string
+          joined_at?: string
+          user_id: string
+        }
+        Update: {
+          conversation_id?: string
+          joined_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "conversation_members_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "conversations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "conversation_members_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      conversations: {
+        Row: {
+          connection_id: string
+          created_at: string
+          id: string
+          updated_at: string
+        }
+        Insert: {
+          connection_id: string
+          created_at?: string
+          id?: string
+          updated_at?: string
+        }
+        Update: {
+          connection_id?: string
+          created_at?: string
+          id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "conversations_connection_id_fkey"
+            columns: ["connection_id"]
+            isOneToOne: true
+            referencedRelation: "connections"
             referencedColumns: ["id"]
           },
         ]
@@ -235,38 +361,50 @@ export type Database = {
       }
       events: {
         Row: {
+          cover_path: string | null
           created_at: string
           description: string
+          discovery_radius_m: number
           ends_at: string
+          event_type: string
           id: string
           is_public: boolean
           name: string
           organizer_id: string
           starts_at: string
+          status: string
           updated_at: string
           venue: string
         }
         Insert: {
+          cover_path?: string | null
           created_at?: string
           description?: string
+          discovery_radius_m?: number
           ends_at: string
+          event_type?: string
           id?: string
           is_public?: boolean
           name: string
           organizer_id: string
           starts_at: string
+          status?: string
           updated_at?: string
           venue?: string
         }
         Update: {
+          cover_path?: string | null
           created_at?: string
           description?: string
+          discovery_radius_m?: number
           ends_at?: string
+          event_type?: string
           id?: string
           is_public?: boolean
           name?: string
           organizer_id?: string
           starts_at?: string
+          status?: string
           updated_at?: string
           venue?: string
         }
@@ -549,6 +687,48 @@ export type Database = {
           {
             foreignKeyName: "meeting_confirmations_user_id_fkey"
             columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      messages: {
+        Row: {
+          content: string
+          conversation_id: string
+          created_at: string
+          id: string
+          read_at: string | null
+          sender_id: string
+        }
+        Insert: {
+          content: string
+          conversation_id: string
+          created_at?: string
+          id?: string
+          read_at?: string | null
+          sender_id: string
+        }
+        Update: {
+          content?: string
+          conversation_id?: string
+          created_at?: string
+          id?: string
+          read_at?: string | null
+          sender_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "messages_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "conversations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "messages_sender_id_fkey"
+            columns: ["sender_id"]
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
