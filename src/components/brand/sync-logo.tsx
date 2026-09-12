@@ -23,5 +23,5 @@ export function SyncLogo({ className, mark = false }: { className?: string; mark
   );
 }
 export function SyncWordmark({ className }: { className?: string }) {
-  return <img src={syncLogo.url} alt="SYNC" className={cn("h-7 w-auto select-none sm:h-8", className)} draggable={false} />;
+  return <img src={syncLogo.url} alt="SYNC" className={cn("h-7 w-auto select-none invert dark:invert-0 sm:h-8", className)} draggable={false} />;
 }
