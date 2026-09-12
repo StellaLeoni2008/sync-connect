@@ -11,10 +11,17 @@ export const Route = createFileRoute("/_authenticated/you")({
   component: You,
 });
 
+const NOTIFICATION_SWITCHES = [
+  { key: "people_nearby", label: "People nearby" },
+  { key: "sync_requests", label: "Sync requests" },
+  { key: "new_messages", label: "New messages" },
+  { key: "nearby_events", label: "Nearby events" },
+] as const;
+
 function You() {
   const { user } = Route.useRouteContext();
   const isGuest = Boolean((user as { is_anonymous?: boolean }).is_anonymous);
-  const [prefs, setPrefs] = useState({ strong_sync: true, mutual_sync: true, help_alert: true, resync: true, haptics: true });
+  const [prefs, setPrefs] = useState({ people_nearby: true, sync_requests: true, new_messages: true, nearby_events: true, haptics: true });
   const [name, setName] = useState("");
   const [tags, setTags] = useState({ hobbies: "", interests: "", can_help_with: "" });
   const [saved, setSaved] = useState(false);
@@ -26,7 +33,7 @@ function You() {
       setName(data?.name ?? "");
       setTags({ hobbies: (data?.hobbies ?? []).join(", "), interests: (data?.interests ?? []).join(", "), can_help_with: (data?.can_help_with ?? []).join(", ") });
     });
-    supabase.from("notification_preferences").select("strong_sync,mutual_sync,help_alert,resync,haptics").eq("user_id", user.id).maybeSingle().then(({ data }) => { if (data) setPrefs(data); });
+    supabase.from("notification_preferences").select("people_nearby,sync_requests,new_messages,nearby_events,haptics").eq("user_id", user.id).maybeSingle().then(({ data }) => { if (data) setPrefs(data); });
   }, [user.id]);
 
   async function change(k: keyof typeof prefs, v: boolean) {
@@ -76,29 +83,30 @@ function You() {
         ) : null}
 
         <div className="mt-3 rounded-2xl border border-border bg-card p-5">
-          <h2 className="font-medium">Notifications & haptics</h2>
-          {Object.entries(prefs).map(([k, v]) => (
-            <label key={k} className="flex items-center justify-between border-b border-border py-4 last:border-0">
-              <span className="text-sm">{k.replaceAll("_", " ")}</span>
-              <Switch checked={v} onCheckedChange={(x) => change(k as keyof typeof prefs, x)} />
+          <h2 className="font-medium">Notifications</h2>
+          {NOTIFICATION_SWITCHES.map(({ key, label }) => (
+            <label key={key} className="flex items-center justify-between border-b border-border py-4">
+              <span className="text-sm">{label}</span>
+              <Switch checked={prefs[key]} onCheckedChange={(next) => change(key, next)} />
             </label>
           ))}
+          <label className="flex items-center justify-between py-4">
+            <span className="text-sm">Vibrate on a SYNC</span>
+            <Switch checked={prefs.haptics} onCheckedChange={(next) => change("haptics", next)} />
+          </label>
+          <p className="text-xs text-muted-foreground">Nearby alerts are limited to one every 30 minutes.</p>
         </div>
 
-        <div className="mt-3 rounded-2xl border border-border bg-card p-5">
-          <h2 className="font-medium">What SYNC can match you on</h2>
-          <p className="mt-2 text-sm text-muted-foreground">Separate with commas. Hobbies and interests count as much as skills.</p>
+        <details className="mt-3 rounded-2xl border border-border bg-card p-5">
+          <summary className="cursor-pointer font-medium">Quick tags</summary>
+          <p className="mt-3 text-sm text-muted-foreground">Separate with commas. Hobbies and interests count as much as skills.</p>
           <Input className="mt-4 h-13 rounded-full px-5" value={tags.hobbies} onChange={(e) => { setSaved(false); setTags({ ...tags, hobbies: e.target.value }); }} placeholder="Hobbies & activities" aria-label="Hobbies and activities" />
           <Input className="mt-3 h-13 rounded-full px-5" value={tags.interests} onChange={(e) => { setSaved(false); setTags({ ...tags, interests: e.target.value }); }} placeholder="Interests" aria-label="Interests" />
           <Input className="mt-3 h-13 rounded-full px-5" value={tags.can_help_with} onChange={(e) => { setSaved(false); setTags({ ...tags, can_help_with: e.target.value }); }} placeholder="You can help with" aria-label="You can help with" />
           <Button className="mt-4" variant="outline" onClick={saveTags}>{saved ? "Saved" : "Save"}</Button>
-        </div>
+        </details>
 
-        <div className="mt-3 rounded-2xl border border-border bg-card p-5">
-          <h2 className="font-medium">SYNC Band</h2>
-          <p className="mt-2 text-sm text-muted-foreground">Your phone has everything you need. Band setup requires the native app.</p>
-          <Button variant="outline" className="mt-5" asChild><Link to="/band">Explore the Band</Link></Button>
-        </div>
+        <Button variant="outline" className="mt-3 w-full" asChild><Link to="/band">Explore the SYNC Band</Link></Button>
 
         <Button variant="outline" className="mt-8" onClick={async () => { await supabase.auth.signOut(); window.location.href = "/"; }}>Sign out</Button>
       </div>

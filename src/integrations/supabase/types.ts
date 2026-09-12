@@ -394,6 +394,7 @@ export type Database = {
           is_public: boolean
           name: string
           organizer_id: string
+          participant_limit: number | null
           starts_at: string
           status: string
           updated_at: string
@@ -410,6 +411,7 @@ export type Database = {
           is_public?: boolean
           name: string
           organizer_id: string
+          participant_limit?: number | null
           starts_at: string
           status?: string
           updated_at?: string
@@ -426,6 +428,7 @@ export type Database = {
           is_public?: boolean
           name?: string
           organizer_id?: string
+          participant_limit?: number | null
           starts_at?: string
           status?: string
           updated_at?: string
@@ -575,6 +578,7 @@ export type Database = {
           intent_a_id: string
           intent_b_id: string
           match_reason: string
+          origin: string
           proximity_state: string | null
           status: string
           updated_at: string
@@ -590,6 +594,7 @@ export type Database = {
           intent_a_id: string
           intent_b_id: string
           match_reason: string
+          origin?: string
           proximity_state?: string | null
           status?: string
           updated_at?: string
@@ -605,6 +610,7 @@ export type Database = {
           intent_a_id?: string
           intent_b_id?: string
           match_reason?: string
+          origin?: string
           proximity_state?: string | null
           status?: string
           updated_at?: string
@@ -763,8 +769,12 @@ export type Database = {
           haptics: boolean
           help_alert: boolean
           mutual_sync: boolean
+          nearby_events: boolean
+          new_messages: boolean
+          people_nearby: boolean
           resync: boolean
           strong_sync: boolean
+          sync_requests: boolean
           updated_at: string
           user_id: string
         }
@@ -772,8 +782,12 @@ export type Database = {
           haptics?: boolean
           help_alert?: boolean
           mutual_sync?: boolean
+          nearby_events?: boolean
+          new_messages?: boolean
+          people_nearby?: boolean
           resync?: boolean
           strong_sync?: boolean
+          sync_requests?: boolean
           updated_at?: string
           user_id: string
         }
@@ -781,8 +795,12 @@ export type Database = {
           haptics?: boolean
           help_alert?: boolean
           mutual_sync?: boolean
+          nearby_events?: boolean
+          new_messages?: boolean
+          people_nearby?: boolean
           resync?: boolean
           strong_sync?: boolean
+          sync_requests?: boolean
           updated_at?: string
           user_id?: string
         }

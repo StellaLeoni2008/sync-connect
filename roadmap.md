@@ -1,11 +1,15 @@
 # Roadmap
 
-- [ ] Update global primary and secondary action styling
-- [ ] Simplify the landing page and clarify real-world intents
-- [ ] Audit and fix responsive layouts across core screens
-- [ ] Add connection detail and full mutually revealed profiles
-- [ ] Add private realtime chat with strict access controls
-- [ ] Add explicit expiring location sharing for connections
-- [ ] Add event creation, joining, detail, and organizer controls
-- [ ] Preserve and verify event-aware matching
-- [ ] Test the two-account journey and responsive viewports
+- [x] Global primary/secondary action styling
+- [x] Shorter landing page
+- [x] Responsive layouts across core screens
+- [x] Connection detail and mutually revealed profiles
+- [x] Private realtime chat with strict access controls
+- [x] Expiring location sharing for connections
+- [x] Event creation, joining, detail, organizer controls
+- [x] Edit profile, SYNC vibration, logo header, guest sign-in
+- [x] Proximity radar on the SYNC page with tap-to-preview and Request Sync
+- [x] Proximity-first matching (skills only add context)
+- [x] Functional events: uppercase types fixed, participant limit, Full state
+- [x] Four notification switches with a 30-minute nearby cooldown
+- [x] Radar animations, blip entrance, haptics, success state, skeletons

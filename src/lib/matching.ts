@@ -238,10 +238,15 @@ function intersect(wanted: string[], offered: string[]) {
   });
 }
 
-export type ProximityState = "NEARBY" | "CLOSE" | "VERY CLOSE";
+export type ProximityState = "NEARBY" | "CLOSE" | "VERY_CLOSE";
+
+/** Human label for a proximity state (the stored value uses an underscore). */
+export function proximityLabel(state: string | null | undefined) {
+  return (state ?? "NEARBY").replace("_", " ").toLowerCase();
+}
 
 export function proximityState(distanceMeters: number): ProximityState {
-  if (distanceMeters <= 50) return "VERY CLOSE";
+  if (distanceMeters <= 50) return "VERY_CLOSE";
   if (distanceMeters <= 200) return "CLOSE";
   return "NEARBY";
 }
@@ -296,12 +301,13 @@ export function scoreMatch(input: {
     reasons.push(`Interested in ${interestHits.join(", ")}`);
   }
 
-  // Proximity: required gate plus scoring factor.
+  // Proximity comes first: being nearby and available is enough to be discoverable.
+  // Skills, activities and interests only add context and improve the ordering.
   const withinRadius = distanceMeters <= radiusMeters;
   const fresh = presenceAgeMs <= PRESENCE_FRESHNESS_MS;
   if (withinRadius) {
     const closeness = 1 - Math.min(1, distanceMeters / Math.max(1, radiusMeters));
-    score += Math.round(closeness * 12);
+    score += 30 + Math.round(closeness * 20);
   }
   if (fresh) score += Math.round((1 - Math.min(1, presenceAgeMs / PRESENCE_FRESHNESS_MS)) * 5);
   if (input.sameEvent) {
@@ -313,7 +319,8 @@ export function scoreMatch(input: {
     reasons.push(`Also looking for ${reciprocalMatched.join(", ")}`);
   }
 
-  const eligible = matched.length > 0 && withinRadius && fresh;
+  if (!reasons.length) reasons.push("Nearby and open to meeting right now");
+  const eligible = withinRadius && fresh;
   return {
     score: Math.max(0, Math.min(99, Math.round(score))),
     matched: matched.length ? matched : wanted.slice(0, 3),

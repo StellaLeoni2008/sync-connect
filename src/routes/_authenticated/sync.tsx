@@ -1,49 +1,82 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { CalendarDays, Compass, GraduationCap, HandHelping, Hammer, MapPin, Users } from "lucide-react";
 import { AppShell } from "@/components/layout/app-shell";
-import { ProximityField } from "@/components/sync/proximity-field";
-import { SyncDebugPanel } from "@/components/dev/sync-debug-panel";
+import { Radar } from "@/components/sync/radar";
+import { PersonSheet } from "@/components/sync/person-sheet";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
+import { Skeleton } from "@/components/ui/skeleton";
 import { supabase } from "@/integrations/supabase/client";
 import { useProximity, type Fix } from "@/hooks/use-proximity";
 import { vibrateSync } from "@/lib/haptics";
+import { askForNotifications, notify } from "@/lib/notifications";
 import { DEFAULT_RADIUS_M, RADIUS_OPTIONS_M } from "@/lib/matching";
-import { activateSync, findNearbySyncs, stopSync, updatePresence } from "@/lib/sync.functions";
+import {
+  getNearbyPeople,
+  getSyncRequests,
+  requestSync,
+  respondToSyncRequest,
+  startDiscovery,
+  stopSync,
+  updatePresence,
+  type NearbyPerson,
+  type SyncRequest,
+} from "@/lib/sync.functions";
 
-export const Route = createFileRoute("/_authenticated/sync")({head:()=>({meta:[{title:"Start a SYNC — SYNC"},{name:"description",content:"Share what you want to do and find relevant people nearby."},{property:"og:title",content:"Start a SYNC"},{property:"og:description",content:"Find the right person nearby while keeping your exact location private."},{property:"og:type",content:"website"},{name:"twitter:card",content:"summary"}]}), component: SyncHome });
+export const Route = createFileRoute("/_authenticated/sync")({
+  head: () => ({
+    meta: [
+      { title: "Radar — SYNC" },
+      { name: "description", content: "See who is nearby right now and ask to sync in one tap." },
+      { property: "og:title", content: "Radar — SYNC" },
+      { property: "og:description", content: "Proximity-first discovery. Your exact location always stays private." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
+    ],
+  }),
+  component: SyncRadar,
+});
 
-const modes = [
-  { id: "BUILD", icon: Hammer, desc: "Find the missing skill" },
-  { id: "MEET", icon: Users, desc: "Meet someone worth knowing" },
-  { id: "LEARN", icon: GraduationCap, desc: "Find someone who can teach" },
-  { id: "HELP", icon: HandHelping, desc: "Offer what you know" },
-  { id: "EXPLORE", icon: Compass, desc: "Leave room for serendipity" },
-  { id: "EVENT", icon: CalendarDays, desc: "Meet within a SYNC Zone" },
-] as const;
-
-const LOCATION_COPY = "SYNC uses your location while discovery is active to find relevant people nearby. We never show your exact location to other users.";
-
-function SyncHome() {
+function SyncRadar() {
   const { user } = Route.useRouteContext();
-  const [mode, setMode] = useState<(typeof modes)[number]["id"]>("BUILD");
-  const [text, setText] = useState("");
   const [active, setActive] = useState(false);
-  const [intent, setIntent] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [starting, setStarting] = useState(false);
+  const [status, setStatus] = useState("");
   const [radius, setRadius] = useState<number>(DEFAULT_RADIUS_M);
-  const [phase, setPhase] = useState<"idle" | "locating" | "searching" | "active">("idle");
-  const [nearby, setNearby] = useState<number | null>(null);
-  const [matchId, setMatchId] = useState<string | null>(null);
+  const [people, setPeople] = useState<NearbyPerson[] | null>(null);
+  const [selected, setSelected] = useState<NearbyPerson | null>(null);
+  const [requests, setRequests] = useState<SyncRequest[]>([]);
+  const [busy, setBusy] = useState(false);
+  const [celebrate, setCelebrate] = useState<string | null>(null);
   const [error, setError] = useState("");
-  const [realtime, setRealtime] = useState("idle");
   const radiusRef = useRef(radius);
   radiusRef.current = radius;
+  const seen = useRef(new Set<string>());
 
-  const pushFix = useCallback(async (next: Fix) => {
-    await updatePresence({ data: { latitude: next.latitude, longitude: next.longitude, accuracy: next.accuracy, radiusMeters: radiusRef.current, discoveryActive: true } });
-    await findNearbySyncs();
+  const refresh = useCallback(async () => {
+    const [nearby, inbound] = await Promise.all([getNearbyPeople(), getSyncRequests()]);
+    setPeople(nearby.people);
+    setActive(nearby.discoveryActive);
+    setRequests(inbound);
+    const fresh = nearby.people.filter((person) => !seen.current.has(person.userId));
+    fresh.forEach((person) => seen.current.add(person.userId));
+    const first = fresh[0];
+    if (first && nearby.discoveryActive) {
+      vibrateSync();
+      notify("people-nearby", "Someone is nearby", `${fresh.length === 1 ? first.name : `${fresh.length} people`} nearby right now.`, { cooldown: true });
+    }
+    const firstRequest = inbound[0];
+    if (firstRequest) notify(`request-${firstRequest.matchId}`, "Sync request", `${firstRequest.name} wants to sync with you.`);
   }, []);
+
+  const pushFix = useCallback(
+    async (next: Fix) => {
+      await updatePresence({ data: { latitude: next.latitude, longitude: next.longitude, accuracy: next.accuracy, radiusMeters: radiusRef.current, discoveryActive: true } });
+      await refresh();
+    },
+    [refresh],
+  );
 
   const { permission, fix, error: locationError, locating, requestFix, watch } = useProximity(pushFix);
 
@@ -53,91 +86,54 @@ function SyncHome() {
       .select("onboarding_complete,discovery_enabled")
       .eq("id", user.id)
       .maybeSingle()
-      .then(({ data }) => {
-        if (!data?.onboarding_complete) window.location.href = "/onboarding";
-        else if (data.discovery_enabled) {
-          setActive(true);
-          setPhase("active");
+      .then(async ({ data }) => {
+        if (!data?.onboarding_complete) {
+          window.location.href = "/onboarding";
+          return;
         }
+        if (data.discovery_enabled) await refresh();
+        setLoading(false);
       });
-    supabase
-      .from("intents")
-      .select("original_text")
-      .eq("user_id", user.id)
-      .eq("status", "ACTIVE")
-      .order("created_at", { ascending: false })
-      .limit(1)
-      .maybeSingle()
-      .then(({ data }) => setIntent(data?.original_text ?? ""));
-  }, [user.id]);
+  }, [user.id, refresh]);
 
-  const refreshMatch = useCallback(async () => {
-    const { data } = await supabase
-      .from("match_candidates")
-      .select("id")
-      .or(`user_a_id.eq.${user.id},user_b_id.eq.${user.id}`)
-      .in("status", ["PENDING", "WAITING", "MUTUAL"])
-      .order("created_at", { ascending: false })
-      .limit(1)
-      .maybeSingle();
-    const next = data?.id ?? null;
-    setMatchId((current) => {
-      if (next && next !== current) vibrateSync();
-      return next;
-    });
-  }, [user.id]);
-
-  // Keep presence fresh and re-run the nearby search while discovery is active.
+  // Keep the radar live while discovery is on.
   useEffect(() => {
     if (!active) {
       watch(false);
-      setRealtime("idle");
       return;
     }
     watch(true);
     const channel = supabase
-      .channel(`sync-home:${user.id}`)
-      .on("postgres_changes", { event: "*", schema: "public", table: "match_candidates" }, () => {
-        void refreshMatch();
-      })
-      .subscribe((status) => setRealtime(status));
-    const interval = window.setInterval(() => {
-      void findNearbySyncs().then((result) => {
-        setNearby(result.nearbyActiveCount);
-        if (result.matchId) setMatchId(result.matchId);
-      });
-    }, 45000);
-    void refreshMatch();
+      .channel(`radar:${user.id}`)
+      .on("postgres_changes", { event: "*", schema: "public", table: "match_candidates" }, () => void refresh())
+      .on("postgres_changes", { event: "INSERT", schema: "public", table: "match_responses" }, () => void refresh())
+      .subscribe();
+    const interval = window.setInterval(() => void refresh(), 20000);
     return () => {
       watch(false);
       supabase.removeChannel(channel);
       window.clearInterval(interval);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [active, user.id, refreshMatch]);
+  }, [active, user.id, refresh]);
 
   async function start() {
-    if (text.trim().length < 3) return;
     setError("");
-    setPhase("locating");
+    setStarting(true);
+    void askForNotifications();
     const current = fix && Date.now() - fix.at < 60000 ? fix : await requestFix();
     if (!current) {
-      setPhase("idle");
+      setStarting(false);
       return;
     }
-    setPhase("searching");
     try {
-      const result = await activateSync({
-        data: { text, goal: mode, location: { latitude: current.latitude, longitude: current.longitude, accuracy: current.accuracy, radiusMeters: radius } },
-      });
-      setIntent(text);
-      setNearby(result.nearbyActiveCount);
-      setMatchId(result.matchId ?? null);
+      await startDiscovery({ data: { status: status.trim() || undefined, location: { latitude: current.latitude, longitude: current.longitude, accuracy: current.accuracy, radiusMeters: radius } } });
       setActive(true);
-      setPhase("active");
+      await refresh();
     } catch (cause) {
-      setError(cause instanceof Error ? cause.message : "We couldn’t start SYNC. Try again.");
-      setPhase("idle");
+      setError(cause instanceof Error ? cause.message : "We couldn’t start the radar. Try again.");
+    } finally {
+      setStarting(false);
     }
   }
 
@@ -145,94 +141,128 @@ function SyncHome() {
     await stopSync();
     watch(false);
     setActive(false);
-    setPhase("idle");
-    setMatchId(null);
+    setPeople(null);
+    seen.current.clear();
+  }
+
+  async function send(person: NearbyPerson) {
+    setBusy(true);
+    try {
+      await requestSync({ data: { userId: person.userId } });
+      vibrateSync();
+      setSelected(null);
+      await refresh();
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : "That request didn’t go through.");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function answer(request: SyncRequest, accept: boolean) {
+    setBusy(true);
+    try {
+      const result = await respondToSyncRequest({ data: { matchId: request.matchId, accept } });
+      if (accept) {
+        vibrateSync();
+        if (result.status === "MUTUAL" || result.status === "MET") setCelebrate(request.name);
+      }
+      await refresh();
+    } finally {
+      setBusy(false);
+    }
   }
 
   const locationBlocked = permission === "denied" || permission === "unsupported";
+  const count = people?.length ?? 0;
 
   return (
     <AppShell>
-      {active ? (
-        <section className="flex min-h-[70vh] flex-col items-center justify-center text-center">
-          <ProximityField />
-          <p className="mt-12 text-xs uppercase tracking-[.16em] text-signal">SYNC ACTIVE</p>
-          <h1 className="mt-4 text-3xl font-medium">
-            {matchId ? "Someone nearby has what you’re looking for." : "No strong SYNC nearby yet."}
-          </h1>
-          <p className="mt-5 max-w-xs text-sm text-muted-foreground">{intent}</p>
-          <p className="mt-3 text-xs text-muted-foreground">
-            {nearby === null ? "Looking for people nearby…" : `${nearby} ${nearby === 1 ? "person" : "people"} syncing within ${radius} m`}
-          </p>
-          {matchId?<Button asChild className="mt-8"><Link to="/match/$matchId" params={{matchId}}>View this SYNC</Link></Button>:<Button asChild className="mt-8"><Link to="/discovery">Open Discovery</Link></Button>}
-          <Button className="mt-3" variant="outline" onClick={stop}>
-            Stop Syncing
-          </Button>
-        </section>
-      ) : (
-        <>
-          <p className="mt-10 text-xs uppercase text-muted-foreground">Discovery Off</p>
-          <h1 className="mt-4 text-4xl font-medium leading-tight">What are you looking for today?</h1>
-          <div className="mt-9 grid grid-cols-2 gap-2">
-            {modes.map(({ id, icon: Icon, desc }) => (
-              <button
-                key={id}
-                onClick={() => setMode(id)}
-                className={`min-h-32 rounded-2xl border p-4 text-left ${mode === id ? "border-signal bg-elevated" : "border-border bg-card"}`}
-              >
-                <Icon className={mode === id ? "h-5 w-5 text-signal" : "h-5 w-5"} strokeWidth={1.5} />
-                <span className="mt-5 block text-sm font-medium">{id[0] + id.slice(1).toLowerCase()}</span>
-                <span className="mt-1 block text-xs leading-relaxed text-muted-foreground">{desc}</span>
-              </button>
+      <section className="pt-8">
+        {requests.length ? (
+          <div className="mb-8 space-y-3">
+            {requests.map((request) => (
+              <div key={request.matchId} className="animate-blip-in rounded-2xl border border-signal/40 bg-card p-4 signal-glow">
+                <div className="flex items-center gap-3">
+                  {request.photoUrl ? <img src={request.photoUrl} alt="" className="h-12 w-12 rounded-full object-cover" /> : <span className="flex h-12 w-12 items-center justify-center rounded-full bg-secondary">{request.name.slice(0, 1)}</span>}
+                  <div className="min-w-0 flex-1">
+                    <p className="font-medium">{request.name} wants to sync</p>
+                    <p className="truncate text-xs text-muted-foreground">{request.distanceLabel}</p>
+                  </div>
+                </div>
+                <div className="mt-4 grid grid-cols-2 gap-2">
+                  <Button size="sm" disabled={busy} onClick={() => answer(request, true)}>Accept</Button>
+                  <Button size="sm" variant="outline" disabled={busy} onClick={() => answer(request, false)}>Not now</Button>
+                </div>
+              </div>
             ))}
           </div>
-          <label className="mt-8 block text-sm" htmlFor="intent-text">
-            Tell SYNC what you need
-          </label>
-          <Textarea
-            id="intent-text"
-            value={text}
-            maxLength={1000}
-            onChange={(event) => setText(event.target.value)}
-            placeholder="I want to learn Python · I want to play soccer · I need a designer"
-            className="mt-3 min-h-32 rounded-2xl bg-card p-5"
-          />
+        ) : null}
 
-          <div className="mt-6 rounded-2xl border border-border bg-card p-5">
-            <div className="flex items-center gap-2 text-sm">
-              <MapPin className="h-4 w-4 text-signal" strokeWidth={1.5} />
-              <span className="font-medium">Nearby radius</span>
-            </div>
-            <div className="mt-4 flex flex-wrap gap-2">
-              {RADIUS_OPTIONS_M.map((option) => (
-                <button
-                  key={option}
-                  onClick={() => setRadius(option)}
-                  className={`rounded-full border px-4 py-2 text-xs ${radius === option ? "border-primary bg-primary text-primary-foreground" : "border-border"}`}
-                >
-                  {option >= 1000 ? `${option / 1000} km` : `${option} m`}
-                </button>
-              ))}
-            </div>
-            <p className="mt-4 text-xs leading-relaxed text-muted-foreground">{LOCATION_COPY}</p>
-            {locationBlocked ? (
-              <div className="mt-4">
-                <p className="text-sm text-red-500">Location is required to find nearby SYNCs.</p>
-                <Button className="mt-3" variant="outline" onClick={() => void requestFix()}>
-                  Enable Location
-                </Button>
-              </div>
-            ) : null}
+        {celebrate ? (
+          <div className="animate-sync-success mb-8 rounded-2xl border border-signal bg-card p-6 text-center signal-glow">
+            <p className="text-xs uppercase tracking-[.18em] text-signal">It’s a SYNC</p>
+            <h2 className="mt-3 text-2xl font-medium">You and {celebrate} are connected.</h2>
+            <Button asChild className="mt-5"><Link to="/connections">Open connection</Link></Button>
           </div>
+        ) : null}
 
-          {error || locationError ? <p className="mt-4 text-sm text-red-500">{error || locationError}</p> : null}
+        {loading ? (
+          <div className="space-y-6">
+            <Skeleton className="mx-auto aspect-square w-full max-w-[22rem] rounded-full" />
+            <Skeleton className="mx-auto h-12 w-48 rounded-full" />
+          </div>
+        ) : (
+          <>
+            <div className="text-center">
+              <p className="text-xs uppercase tracking-[.16em] text-signal">{active ? "Radar on" : "Radar off"}</p>
+              <h1 className="mt-3 text-3xl font-medium">
+                {!active ? "See who’s around you." : count ? `${count} ${count === 1 ? "person" : "people"} nearby` : "Looking around you…"}
+              </h1>
+            </div>
 
-          <Button size="lg" className="mt-3 w-full" disabled={phase === "locating" || phase === "searching" || locating || text.trim().length < 3} onClick={start}>
-            {phase === "locating" || locating ? "Getting your location…" : phase === "searching" ? "Looking for people nearby…" : "START SYNCING"}
-          </Button>
-        </>
-      )}
-      <SyncDebugPanel permission={permission} realtime={realtime} />
+            <div className="mt-8">
+              <Radar people={people ?? []} radiusMeters={radius} active={active} onSelect={setSelected} />
+            </div>
+
+            {active ? (
+              <>
+                <p className="mt-8 text-center text-sm text-muted-foreground">Tap anyone to see their profile and ask to sync.</p>
+                <Button className="mx-auto mt-5 block" variant="outline" onClick={stop}>Turn radar off</Button>
+              </>
+            ) : (
+              <div className="mt-8">
+                <Input
+                  value={status}
+                  maxLength={140}
+                  onChange={(event) => setStatus(event.target.value)}
+                  placeholder="What are you up to? (optional)"
+                  aria-label="What are you up to"
+                  className="h-13 rounded-full px-5"
+                />
+                <div className="mt-4 flex flex-wrap justify-center gap-2">
+                  {RADIUS_OPTIONS_M.map((option) => (
+                    <button
+                      key={option}
+                      onClick={() => setRadius(option)}
+                      className={`rounded-full border px-4 py-2 text-xs ${radius === option ? "border-primary bg-primary text-primary-foreground" : "border-border text-muted-foreground"}`}
+                    >
+                      {option >= 1000 ? `${option / 1000} km` : `${option} m`}
+                    </button>
+                  ))}
+                </div>
+                <Button size="lg" className="mt-6 w-full" disabled={starting || locating} onClick={start}>
+                  {locating ? "Finding you…" : starting ? "Turning on…" : "Turn radar on"}
+                </Button>
+                {locationBlocked ? <p className="mt-4 text-center text-sm text-muted-foreground">SYNC needs location to find people nearby. Your exact position is never shown to anyone.</p> : null}
+              </div>
+            )}
+
+            {error || locationError ? <p className="mt-4 text-center text-sm text-destructive">{error || locationError}</p> : null}
+          </>
+        )}
+      </section>
+      <PersonSheet person={selected} busy={busy} onClose={() => setSelected(null)} onRequest={send} />
     </AppShell>
   );
 }
