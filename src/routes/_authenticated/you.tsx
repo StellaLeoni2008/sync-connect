@@ -11,6 +11,13 @@ export const Route = createFileRoute("/_authenticated/you")({
   component: You,
 });
 
+const NOTIFICATION_SWITCHES = [
+  { key: "people_nearby", label: "People nearby" },
+  { key: "sync_requests", label: "Sync requests" },
+  { key: "new_messages", label: "New messages" },
+  { key: "nearby_events", label: "Nearby events" },
+] as const;
+
 function You() {
   const { user } = Route.useRouteContext();
   const isGuest = Boolean((user as { is_anonymous?: boolean }).is_anonymous);
