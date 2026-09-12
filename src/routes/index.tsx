@@ -1,24 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { ArrowDown, Radio, ShieldCheck, Sparkles, UsersRound } from "lucide-react";
+import { SyncLogo, SyncMark } from "@/components/brand/sync-logo";
+import { Button } from "@/components/ui/button";
+import humanStory from "@/assets/sync-human-story.jpg";
+import bandHero from "@/assets/sync-band-hero.jpg";
 
-// No head() here: the home route inherits title/description/og/twitter from
-// __root.tsx, and ships no og:image so serve-time hosting can inject the
-// project's social preview (explicit og:image or latest screenshot).
 export const Route = createFileRoute("/")({
-  component: Index,
+  head: () => ({ meta: [{ title: "SYNC — Right person. Right place. Right time." }, { name: "description", content: "AI-powered social discovery for the real world. No feed, followers, or swiping." }, { property: "og:title", content: "SYNC — Right person. Right place. Right time." }, { property: "og:description", content: "The social network you don’t have to scroll." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary_large_image" }] }),
+  component: Landing,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
-function Index() {
-  return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
-    </div>
-  );
-}
+function Landing(){return <main className="bg-background text-foreground"><section className="dark relative min-h-screen overflow-hidden bg-background px-5 py-7 text-foreground"><div className="mx-auto max-w-6xl"><nav className="flex items-center justify-between"><SyncLogo className="text-2xl"/><div className="flex items-center gap-3"><a href="/band" className="hidden text-sm text-muted-foreground sm:block">The Band</a><Button asChild size="sm"><a href="/auth">Get Started</a></Button></div></nav><div className="flex min-h-[82vh] flex-col justify-center"><p className="text-xs uppercase tracking-[.18em] text-signal">AI-powered social discovery</p><h1 className="mt-6 max-w-4xl text-6xl font-medium leading-[.94] tracking-[-.05em] sm:text-8xl">Right person.<br/>Right place.<br/>Right time.</h1><p className="mt-8 max-w-md text-lg text-muted-foreground">Meet the people you’re supposed to meet — in the real world.</p><div className="mt-10 flex flex-wrap gap-3"><Button asChild size="lg"><a href="/auth">START SYNCING</a></Button><Button asChild variant="dark" size="lg"><a href="#how">HOW IT WORKS</a></Button></div></div><ArrowDown className="h-5 w-5 text-muted-foreground"/></div></section><section className="px-5 py-28 sm:py-40"><div className="mx-auto max-w-6xl"><p className="text-sm text-muted-foreground">NOT ANOTHER SOCIAL NETWORK</p><h2 className="mt-5 max-w-5xl text-5xl font-medium leading-tight tracking-[-.04em] sm:text-7xl">NO FEED. NO FOLLOWERS. NO SWIPING.</h2><p className="mt-10 max-w-xl text-lg text-muted-foreground">You don’t have to scroll to find the right people. They’re already here.</p></div></section><section id="how" className="dark bg-background px-5 py-28 text-foreground sm:py-40"><div className="mx-auto max-w-6xl"><p className="text-xs uppercase tracking-[.18em] text-signal">How it works</p><div className="mt-14 grid gap-px overflow-hidden rounded-2xl bg-border sm:grid-cols-5">{["Intent","Discovery","Match","Mutual consent","Meet"].map((x,i)=><div key={x} className="min-h-52 bg-card p-6"><span className="text-xs text-muted-foreground">0{i+1}</span><h3 className="mt-24 text-xl">{x}</h3></div>)}</div></div></section><section className="grid min-h-[80vh] lg:grid-cols-2"><img src={humanStory} alt="People forming meaningful connections at an event" width="1600" height="1008" loading="lazy" className="h-full min-h-96 w-full object-cover"/><div className="flex flex-col justify-center px-8 py-24 sm:px-16"><p className="text-xs uppercase text-muted-foreground">From events to everyday life</p><h2 className="mt-6 text-5xl font-medium tracking-[-.04em]">More human connections.</h2><p className="mt-7 max-w-md text-muted-foreground">Tell SYNC what you need. It looks for complementary people nearby, keeps both identities private, and reveals you only after mutual consent.</p><div className="mt-12 flex gap-8"><div><ShieldCheck/><p className="mt-3 text-sm">Private first</p></div><div><UsersRound/><p className="mt-3 text-sm">Real people</p></div><div><Radio/><p className="mt-3 text-sm">Nearby signals</p></div></div></div></section><section className="dark bg-background px-5 py-28 text-foreground sm:py-40"><div className="mx-auto grid max-w-6xl items-center gap-16 lg:grid-cols-2"><div><p className="text-xs uppercase tracking-[.18em] text-signal">Optional hardware</p><h2 className="mt-5 text-5xl font-medium tracking-[-.04em]">Small. Smart. Always with you.</h2><p className="mt-6 max-w-md text-muted-foreground">The SYNC Band makes discovery ambient. Your phone still has everything you need.</p><Button asChild className="mt-9"><a href="/band">Explore the Band</a></Button></div><img src={bandHero} alt="Minimal screenless SYNC Band" width="1600" height="1104" loading="lazy" className="rounded-2xl"/></div></section><footer className="px-5 py-16"><div className="mx-auto flex max-w-6xl items-end justify-between"><div><SyncLogo className="text-2xl"/><p className="mt-4 text-sm text-muted-foreground">The social network you don’t have to scroll.</p></div><SyncMark className="text-signal"/></div></footer></main>}
