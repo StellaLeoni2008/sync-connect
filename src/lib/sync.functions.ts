@@ -71,3 +71,18 @@ export const stopSync = createServerFn({ method: "POST" }).middleware([requireSu
   await context.supabase.from("profiles").update({ discovery_enabled: false }).eq("id", context.userId);
   return { ok: true };
 });
+
+export const getRevealedProfile = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input) => z.object({ userId: z.string().uuid() }).parse(input))
+  .handler(async ({ data, context }) => {
+    const { data: profile, error } = await context.supabase.from("profiles").select("*").eq("id", data.userId).single();
+    if (error) throw new Error("This identity has not been revealed.");
+    let photoUrl: string | null = null;
+    if (profile.avatar_path) {
+      const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+      const { data: signed } = await supabaseAdmin.storage.from("profile-photos").createSignedUrl(profile.avatar_path, 900);
+      photoUrl = signed?.signedUrl ?? null;
+    }
+    return { profile, photoUrl };
+  });
