@@ -331,11 +331,17 @@ export type Database = {
       intents: {
         Row: {
           created_at: string
+          desired_activities: string[]
+          desired_roles: string[]
+          desired_skills: string[]
+          desired_topics: string[]
           event_id: string | null
           expires_at: string | null
           goal: string
           id: string
+          intent_type: string
           interpretation_source: string
+          keywords: string[]
           original_text: string
           status: string
           structured_needs: string[]
@@ -345,11 +351,17 @@ export type Database = {
         }
         Insert: {
           created_at?: string
+          desired_activities?: string[]
+          desired_roles?: string[]
+          desired_skills?: string[]
+          desired_topics?: string[]
           event_id?: string | null
           expires_at?: string | null
           goal: string
           id?: string
+          intent_type?: string
           interpretation_source?: string
+          keywords?: string[]
           original_text: string
           status?: string
           structured_needs?: string[]
@@ -359,11 +371,17 @@ export type Database = {
         }
         Update: {
           created_at?: string
+          desired_activities?: string[]
+          desired_roles?: string[]
+          desired_skills?: string[]
+          desired_topics?: string[]
           event_id?: string | null
           expires_at?: string | null
           goal?: string
           id?: string
+          intent_type?: string
           interpretation_source?: string
+          keywords?: string[]
           original_text?: string
           status?: string
           structured_needs?: string[]
@@ -625,49 +643,64 @@ export type Database = {
       }
       profiles: {
         Row: {
+          activities: string[]
           avatar_path: string | null
           bio: string
+          can_help_with: string[]
           created_at: string
           discovery_enabled: boolean
           event_only_discovery: boolean
           help_requests_enabled: boolean
+          hobbies: string[]
           id: string
+          interests: string[]
           name: string
           onboarding_complete: boolean
           primary_context: string | null
           resync_enabled: boolean
           serendipity_enabled: boolean
           updated_at: string
+          wants_to_learn: string[]
         }
         Insert: {
+          activities?: string[]
           avatar_path?: string | null
           bio?: string
+          can_help_with?: string[]
           created_at?: string
           discovery_enabled?: boolean
           event_only_discovery?: boolean
           help_requests_enabled?: boolean
+          hobbies?: string[]
           id: string
+          interests?: string[]
           name: string
           onboarding_complete?: boolean
           primary_context?: string | null
           resync_enabled?: boolean
           serendipity_enabled?: boolean
           updated_at?: string
+          wants_to_learn?: string[]
         }
         Update: {
+          activities?: string[]
           avatar_path?: string | null
           bio?: string
+          can_help_with?: string[]
           created_at?: string
           discovery_enabled?: boolean
           event_only_discovery?: boolean
           help_requests_enabled?: boolean
+          hobbies?: string[]
           id?: string
+          interests?: string[]
           name?: string
           onboarding_complete?: boolean
           primary_context?: string | null
           resync_enabled?: boolean
           serendipity_enabled?: boolean
           updated_at?: string
+          wants_to_learn?: string[]
         }
         Relationships: []
       }
@@ -825,6 +858,60 @@ export type Database = {
             foreignKeyName: "team_needs_owner_id_fkey"
             columns: ["owner_id"]
             isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_presence: {
+        Row: {
+          accuracy: number | null
+          created_at: string
+          discovery_active: boolean
+          event_id: string | null
+          geohash: string | null
+          latitude: number
+          longitude: number
+          sync_radius_m: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          accuracy?: number | null
+          created_at?: string
+          discovery_active?: boolean
+          event_id?: string | null
+          geohash?: string | null
+          latitude: number
+          longitude: number
+          sync_radius_m?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          accuracy?: number | null
+          created_at?: string
+          discovery_active?: boolean
+          event_id?: string | null
+          geohash?: string | null
+          latitude?: number
+          longitude?: number
+          sync_radius_m?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_presence_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_presence_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
