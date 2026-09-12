@@ -228,7 +228,14 @@ function relatedTo(tag: string) {
 function intersect(wanted: string[], offered: string[]) {
   const offeredSet = new Set<string>();
   for (const tag of offered) relatedTo(tag).forEach((value) => offeredSet.add(value));
-  return wanted.filter((tag) => offeredSet.has(normalize(tag)));
+  const hits = wanted.filter((tag) => offeredSet.has(normalize(tag)));
+  const seen = new Set<string>();
+  return hits.filter((tag) => {
+    const key = normalize(tag);
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
 }
 
 export type ProximityState = "NEARBY" | "CLOSE" | "VERY CLOSE";
