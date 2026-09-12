@@ -84,7 +84,7 @@ const LEXICON: LexEntry[] = [
   { tag: "Volunteering", category: "ACTIVITY", aliases: ["volunteering", "volunteer", "community service"] },
 
   // Practical help
-  { tag: "Bike Repair", category: "SKILL", aliases: ["fix my bike", "bike repair", "bicycle repair"] },
+  { tag: "Bike Repair", category: "SKILL", aliases: ["fix my bike", "fixing my bike", "bike", "bikes", "bicycle", "bike repair", "bicycle repair"] },
   { tag: "Car Repair", category: "SKILL", aliases: ["car repair", "fix my car", "mechanic"] },
   { tag: "Moving Help", category: "SKILL", aliases: ["moving", "move furniture", "carry"] },
   { tag: "Tutoring", category: "SKILL", aliases: ["tutoring", "tutor", "teach me", "teacher", "mentor", "mentoring"] },
@@ -201,8 +201,33 @@ export type MatchBreakdown = {
   eligible: boolean;
 };
 
+/** Tags that should be treated as related (semantic neighbours), not identical. */
+const RELATED_GROUPS: string[][] = [
+  ["Design", "UI/UX", "Product"],
+  ["Programming", "Python", "JavaScript", "React", "Frontend", "Backend", "Mobile", "Data", "Software"],
+  ["AI", "Data", "Research"],
+  ["Fitness", "Running", "Cycling", "Swimming"],
+  ["Math", "Physics", "Studying"],
+  ["Startups", "Business", "Product", "Marketing"],
+  ["Music", "Guitar", "Piano", "Dancing"],
+  ["Coffee", "Food", "Conversation"],
+  ["Hardware", "Embedded Systems", "Robotics", "BLE"],
+  ["Tutoring", "Studying"],
+  ["Languages", "Spanish", "English", "French", "Portuguese", "Mandarin"],
+];
+
+function relatedTo(tag: string) {
+  const normalized = normalize(tag);
+  const out = new Set([normalized]);
+  for (const group of RELATED_GROUPS) {
+    if (group.some((member) => normalize(member) === normalized)) group.forEach((member) => out.add(normalize(member)));
+  }
+  return out;
+}
+
 function intersect(wanted: string[], offered: string[]) {
-  const offeredSet = new Set(offered.map((tag) => normalize(tag)));
+  const offeredSet = new Set<string>();
+  for (const tag of offered) relatedTo(tag).forEach((value) => offeredSet.add(value));
   return wanted.filter((tag) => offeredSet.has(normalize(tag)));
 }
 
