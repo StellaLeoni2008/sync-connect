@@ -1135,7 +1135,13 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      visible_event_participant_counts: {
+        Args: { requested_event_id?: string }
+        Returns: {
+          event_id: string
+          participant_count: number
+        }[]
+      }
     }
     Enums: {
       [_ in never]: never
