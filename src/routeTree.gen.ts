@@ -22,6 +22,7 @@ import { Route as AuthenticatedSyncRouteImport } from './routes/_authenticated/s
 import { Route as AuthenticatedYouRouteImport } from './routes/_authenticated/you'
 import { Route as AuthenticatedChatConversationIdRouteImport } from './routes/_authenticated/chat/$conversationId'
 import { Route as AuthenticatedConnectionsConnectionIdRouteImport } from './routes/_authenticated/connections/$connectionId'
+import { Route as AuthenticatedEventsEventIdRouteImport } from './routes/_authenticated/events/$eventId'
 import { Route as AuthenticatedEventsNewRouteImport } from './routes/_authenticated/events/new'
 import { Route as AuthenticatedMatchMatchIdRouteImport } from './routes/_authenticated/match/$matchId'
 
@@ -92,6 +93,12 @@ const AuthenticatedConnectionsConnectionIdRoute =
     path: '/$connectionId',
     getParentRoute: () => AuthenticatedConnectionsRoute,
   } as any)
+const AuthenticatedEventsEventIdRoute =
+  AuthenticatedEventsEventIdRouteImport.update({
+    id: '/$eventId',
+    path: '/$eventId',
+    getParentRoute: () => AuthenticatedEventsRoute,
+  } as any)
 const AuthenticatedEventsNewRoute = AuthenticatedEventsNewRouteImport.update({
   id: '/new',
   path: '/new',
@@ -117,6 +124,7 @@ export interface FileRoutesByFullPath {
   '/you': typeof AuthenticatedYouRoute
   '/chat/$conversationId': typeof AuthenticatedChatConversationIdRoute
   '/connections/$connectionId': typeof AuthenticatedConnectionsConnectionIdRoute
+  '/events/$eventId': typeof AuthenticatedEventsEventIdRoute
   '/events/new': typeof AuthenticatedEventsNewRoute
   '/match/$matchId': typeof AuthenticatedMatchMatchIdRoute
 }
@@ -133,6 +141,7 @@ export interface FileRoutesByTo {
   '/you': typeof AuthenticatedYouRoute
   '/chat/$conversationId': typeof AuthenticatedChatConversationIdRoute
   '/connections/$connectionId': typeof AuthenticatedConnectionsConnectionIdRoute
+  '/events/$eventId': typeof AuthenticatedEventsEventIdRoute
   '/events/new': typeof AuthenticatedEventsNewRoute
   '/match/$matchId': typeof AuthenticatedMatchMatchIdRoute
 }
@@ -151,6 +160,7 @@ export interface FileRoutesById {
   '/_authenticated/you': typeof AuthenticatedYouRoute
   '/_authenticated/chat/$conversationId': typeof AuthenticatedChatConversationIdRoute
   '/_authenticated/connections/$connectionId': typeof AuthenticatedConnectionsConnectionIdRoute
+  '/_authenticated/events/$eventId': typeof AuthenticatedEventsEventIdRoute
   '/_authenticated/events/new': typeof AuthenticatedEventsNewRoute
   '/_authenticated/match/$matchId': typeof AuthenticatedMatchMatchIdRoute
 }
@@ -169,6 +179,7 @@ export interface FileRouteTypes {
     | '/you'
     | '/chat/$conversationId'
     | '/connections/$connectionId'
+    | '/events/$eventId'
     | '/events/new'
     | '/match/$matchId'
   fileRoutesByTo: FileRoutesByTo
@@ -185,6 +196,7 @@ export interface FileRouteTypes {
     | '/you'
     | '/chat/$conversationId'
     | '/connections/$connectionId'
+    | '/events/$eventId'
     | '/events/new'
     | '/match/$matchId'
   id:
@@ -202,6 +214,7 @@ export interface FileRouteTypes {
     | '/_authenticated/you'
     | '/_authenticated/chat/$conversationId'
     | '/_authenticated/connections/$connectionId'
+    | '/_authenticated/events/$eventId'
     | '/_authenticated/events/new'
     | '/_authenticated/match/$matchId'
   fileRoutesById: FileRoutesById
@@ -307,6 +320,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedConnectionsConnectionIdRouteImport
       parentRoute: typeof AuthenticatedConnectionsRoute
     }
+    '/_authenticated/events/$eventId': {
+      id: '/_authenticated/events/$eventId'
+      path: '/$eventId'
+      fullPath: '/events/$eventId'
+      preLoaderRoute: typeof AuthenticatedEventsEventIdRouteImport
+      parentRoute: typeof AuthenticatedEventsRoute
+    }
     '/_authenticated/events/new': {
       id: '/_authenticated/events/new'
       path: '/new'
@@ -340,10 +360,12 @@ const AuthenticatedConnectionsRouteWithChildren =
   )
 
 interface AuthenticatedEventsRouteChildren {
+  AuthenticatedEventsEventIdRoute: typeof AuthenticatedEventsEventIdRoute
   AuthenticatedEventsNewRoute: typeof AuthenticatedEventsNewRoute
 }
 
 const AuthenticatedEventsRouteChildren: AuthenticatedEventsRouteChildren = {
+  AuthenticatedEventsEventIdRoute: AuthenticatedEventsEventIdRoute,
   AuthenticatedEventsNewRoute: AuthenticatedEventsNewRoute,
 }
 
