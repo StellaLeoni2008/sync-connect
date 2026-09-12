@@ -1,7 +1,7 @@
-import { useRouterState } from "@tanstack/react-router";
+import { Link, useRouterState } from "@tanstack/react-router";
 import { CalendarDays, Radio, UserRound, UsersRound } from "lucide-react";
 import type { ReactNode } from "react";
-import { SyncLogo } from "@/components/brand/sync-logo";
+import { SyncWordmark } from "@/components/brand/sync-logo";
 
 const tabs = [
   { to: "/sync", label: "SYNC", icon: Radio },
@@ -16,7 +16,7 @@ export function AppShell({ children, light = false }: { children: ReactNode; lig
     <div className={light ? "min-h-dvh bg-background text-foreground" : "dark min-h-dvh bg-background text-foreground"}>
       <div className="mx-auto flex min-h-dvh w-full max-w-3xl flex-col border-border md:border-x">
         <header className="flex h-18 shrink-0 items-center justify-between px-4 sm:px-5">
-          <SyncLogo className="text-[1.35rem]" />
+          <Link to="/" aria-label="SYNC home" className="inline-flex items-center"><SyncWordmark /></Link>
           <span className="h-2 w-2 rounded-full bg-signal signal-glow" aria-label="SYNC ready" />
         </header>
         <main className="flex-1 px-4 pb-[calc(6.5rem+env(safe-area-inset-bottom))] sm:px-5">{children}</main>
