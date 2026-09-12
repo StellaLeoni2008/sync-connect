@@ -70,6 +70,18 @@ function SyncHome() {
       .then(({ data }) => setIntent(data?.original_text ?? ""));
   }, [user.id]);
 
+  const refreshMatch = useCallback(async () => {
+    const { data } = await supabase
+      .from("match_candidates")
+      .select("id")
+      .or(`user_a_id.eq.${user.id},user_b_id.eq.${user.id}`)
+      .in("status", ["PENDING", "WAITING", "MUTUAL"])
+      .order("created_at", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+    setMatchId(data?.id ?? null);
+  }, [user.id]);
+
   // Keep presence fresh and re-run the nearby search while discovery is active.
   useEffect(() => {
     if (!active) {
@@ -97,19 +109,7 @@ function SyncHome() {
       window.clearInterval(interval);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [active, user.id]);
-
-  const refreshMatch = useCallback(async () => {
-    const { data } = await supabase
-      .from("match_candidates")
-      .select("id")
-      .or(`user_a_id.eq.${user.id},user_b_id.eq.${user.id}`)
-      .in("status", ["PENDING", "WAITING", "MUTUAL"])
-      .order("created_at", { ascending: false })
-      .limit(1)
-      .maybeSingle();
-    setMatchId(data?.id ?? null);
-  }, [user.id]);
+  }, [active, user.id, refreshMatch]);
 
   async function start() {
     if (text.trim().length < 3) return;
