@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { Link, createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { SyncLogo } from "@/components/brand/sync-logo";
 import { Button } from "@/components/ui/button";
@@ -44,11 +44,9 @@ function Band() {
   return (
     <main className="bg-background text-foreground">
       <nav className="mx-auto flex max-w-6xl items-center justify-between px-5 py-7">
-        <a href="/" aria-label="SYNC home">
-          <SyncLogo className="text-2xl" />
-        </a>
+        <SyncLogo className="text-2xl" />
         <Button asChild size="sm">
-          <a href="/auth">Get Started</a>
+          <Link to="/auth">Get Started</Link>
         </Button>
       </nav>
 
