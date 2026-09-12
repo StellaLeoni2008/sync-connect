@@ -13,3 +13,5 @@
 - [x] Functional events: uppercase types fixed, participant limit, Full state
 - [x] Four notification switches with a 30-minute nearby cooldown
 - [x] Radar animations, blip entrance, haptics, success state, skeletons
+- [x] Official clickable SYNC logo across all branded placements
+- [x] Full responsive SYNC Band product showcase on the home page

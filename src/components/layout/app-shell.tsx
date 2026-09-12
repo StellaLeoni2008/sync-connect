@@ -16,10 +16,11 @@ function useRequestBadge() {
   const [count, setCount] = useState(0);
   useEffect(() => {
     let channel: ReturnType<typeof supabase.channel> | null = null;
+    let active = true;
     (async () => {
       const { data } = await supabase.auth.getUser();
       const userId = data.user?.id;
-      if (!userId) return;
+      if (!userId || !active) return;
       const load = async () => {
         const { count: total } = await supabase
           .from("notifications")
@@ -27,12 +28,14 @@ function useRequestBadge() {
           .eq("user_id", userId)
           .eq("kind", "SYNC_REQUEST")
           .is("read_at", null);
-        setCount(total ?? 0);
+        if (active) setCount(total ?? 0);
       };
       await load();
-      channel = supabase.channel(`badge:${userId}`).on("postgres_changes", { event: "*", schema: "public", table: "notifications" }, () => void load()).subscribe();
+      if (!active) return;
+      channel = supabase.channel(`badge:${userId}:${crypto.randomUUID()}`).on("postgres_changes", { event: "*", schema: "public", table: "notifications" }, () => void load()).subscribe();
     })();
     return () => {
+      active = false;
       if (channel) supabase.removeChannel(channel);
     };
   }, []);
@@ -46,7 +49,7 @@ export function AppShell({ children, light = false }: { children: ReactNode; lig
     <div className={light ? "min-h-dvh bg-background text-foreground" : "dark min-h-dvh bg-background text-foreground"}>
       <div className="mx-auto flex min-h-dvh w-full max-w-3xl flex-col border-border md:border-x">
         <header className="flex h-18 shrink-0 items-center justify-between px-4 sm:px-5">
-          <Link to="/" aria-label="SYNC home" className="inline-flex items-center"><SyncWordmark /></Link>
+          <SyncWordmark />
           <span className="h-2 w-2 rounded-full bg-signal signal-glow" aria-label="SYNC ready" />
         </header>
         <main className="flex-1 px-4 pb-[calc(6.5rem+env(safe-area-inset-bottom))] sm:px-5">{children}</main>
