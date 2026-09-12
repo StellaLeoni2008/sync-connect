@@ -11,7 +11,7 @@ import { useProximity } from "@/hooks/use-proximity";
 
 type Duration = "15" | "60" | "stop";
 type Detail = { connection: Tables<"connections">; profile: Tables<"profiles">; photo: string | null; conversationId: string | null; skills: string[] };
-export const Route = createFileRoute("/_authenticated/connections/$connectionId")({ component: ConnectionDetail });
+export const Route = createFileRoute("/_authenticated/connections/$connectionId")({head:()=>({meta:[{title:"Connection details — SYNC"},{name:"description",content:"View a mutual connection, message them, or share your location temporarily."},{property:"og:title",content:"Connection details — SYNC"},{property:"og:description",content:"Private messaging and consensual location sharing after a mutual SYNC."},{property:"og:type",content:"website"},{name:"twitter:card",content:"summary"}]}), component: ConnectionDetail });
 
 function ConnectionDetail() {
   const { user } = Route.useRouteContext();
