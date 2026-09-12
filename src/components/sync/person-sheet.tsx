@@ -17,7 +17,7 @@ export function PersonSheet({
 }) {
   return (
     <Sheet open={Boolean(person)} onOpenChange={(open) => (open ? null : onClose())}>
-      <SheetContent side="bottom" className="mx-auto max-w-3xl rounded-t-3xl border-border bg-card px-5 pb-8">
+      <SheetContent side="bottom" className="dark mx-auto max-w-3xl rounded-t-3xl border-border bg-card px-5 pb-8 text-foreground">
         {person ? (
           <>
             <SheetHeader className="px-0">
