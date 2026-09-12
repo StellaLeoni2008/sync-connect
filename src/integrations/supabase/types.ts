@@ -326,6 +326,29 @@ export type Database = {
           },
         ]
       }
+      event_participant_counts: {
+        Row: {
+          event_id: string
+          participant_count: number
+        }
+        Insert: {
+          event_id: string
+          participant_count?: number
+        }
+        Update: {
+          event_id?: string
+          participant_count?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "event_participant_counts_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: true
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       event_participants: {
         Row: {
           event_id: string

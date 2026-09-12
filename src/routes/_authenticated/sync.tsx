@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { CalendarDays, Compass, GraduationCap, HandHelping, Hammer, MapPin, Users } from "lucide-react";
 import { AppShell } from "@/components/layout/app-shell";
@@ -11,7 +11,7 @@ import { useProximity, type Fix } from "@/hooks/use-proximity";
 import { DEFAULT_RADIUS_M, RADIUS_OPTIONS_M } from "@/lib/matching";
 import { activateSync, findNearbySyncs, stopSync, updatePresence } from "@/lib/sync.functions";
 
-export const Route = createFileRoute("/_authenticated/sync")({ component: SyncHome });
+export const Route = createFileRoute("/_authenticated/sync")({head:()=>({meta:[{title:"Start a SYNC — SYNC"},{name:"description",content:"Share what you want to do and find relevant people nearby."},{property:"og:title",content:"Start a SYNC"},{property:"og:description",content:"Find the right person nearby while keeping your exact location private."},{property:"og:type",content:"website"},{name:"twitter:card",content:"summary"}]}), component: SyncHome });
 
 const modes = [
   { id: "BUILD", icon: Hammer, desc: "Find the missing skill" },
@@ -159,10 +159,8 @@ function SyncHome() {
           <p className="mt-3 text-xs text-muted-foreground">
             {nearby === null ? "Looking for people nearby…" : `${nearby} ${nearby === 1 ? "person" : "people"} syncing within ${radius} m`}
           </p>
-          <a href={matchId ? `/match/${matchId}` : "/discovery"} className="mt-8 inline-flex h-11 items-center rounded-full bg-primary px-6 text-sm text-primary-foreground">
-            {matchId ? "View this SYNC" : "Open Discovery"}
-          </a>
-          <Button className="mt-3" variant="dark" onClick={stop}>
+          {matchId?<Button asChild className="mt-8"><Link to="/match/$matchId" params={{matchId}}>View this SYNC</Link></Button>:<Button asChild className="mt-8"><Link to="/discovery">Open Discovery</Link></Button>}
+          <Button className="mt-3" variant="outline" onClick={stop}>
             Stop Syncing
           </Button>
         </section>
@@ -205,7 +203,7 @@ function SyncHome() {
                 <button
                   key={option}
                   onClick={() => setRadius(option)}
-                  className={`rounded-full border px-4 py-2 text-xs ${radius === option ? "border-foreground bg-foreground text-background" : "border-border"}`}
+                  className={`rounded-full border px-4 py-2 text-xs ${radius === option ? "border-primary bg-primary text-primary-foreground" : "border-border"}`}
                 >
                   {option >= 1000 ? `${option / 1000} km` : `${option} m`}
                 </button>

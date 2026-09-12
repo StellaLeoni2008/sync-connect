@@ -21,7 +21,9 @@ import { Route as AuthenticatedOnboardingRouteImport } from './routes/_authentic
 import { Route as AuthenticatedSyncRouteImport } from './routes/_authenticated/sync'
 import { Route as AuthenticatedYouRouteImport } from './routes/_authenticated/you'
 import { Route as AuthenticatedChatConversationIdRouteImport } from './routes/_authenticated/chat/$conversationId'
+import { Route as AuthenticatedConnectionsIndexRouteImport } from './routes/_authenticated/connections.index'
 import { Route as AuthenticatedConnectionsConnectionIdRouteImport } from './routes/_authenticated/connections/$connectionId'
+import { Route as AuthenticatedEventsIndexRouteImport } from './routes/_authenticated/events.index'
 import { Route as AuthenticatedEventsEventIdRouteImport } from './routes/_authenticated/events/$eventId'
 import { Route as AuthenticatedEventsNewRouteImport } from './routes/_authenticated/events/new'
 import { Route as AuthenticatedMatchMatchIdRouteImport } from './routes/_authenticated/match/$matchId'
@@ -87,11 +89,23 @@ const AuthenticatedChatConversationIdRoute =
     path: '/chat/$conversationId',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedConnectionsIndexRoute =
+  AuthenticatedConnectionsIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedConnectionsRoute,
+  } as any)
 const AuthenticatedConnectionsConnectionIdRoute =
   AuthenticatedConnectionsConnectionIdRouteImport.update({
     id: '/$connectionId',
     path: '/$connectionId',
     getParentRoute: () => AuthenticatedConnectionsRoute,
+  } as any)
+const AuthenticatedEventsIndexRoute =
+  AuthenticatedEventsIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedEventsRoute,
   } as any)
 const AuthenticatedEventsEventIdRoute =
   AuthenticatedEventsEventIdRouteImport.update({
@@ -127,15 +141,15 @@ export interface FileRoutesByFullPath {
   '/events/$eventId': typeof AuthenticatedEventsEventIdRoute
   '/events/new': typeof AuthenticatedEventsNewRoute
   '/match/$matchId': typeof AuthenticatedMatchMatchIdRoute
+  '/connections/': typeof AuthenticatedConnectionsIndexRoute
+  '/events/': typeof AuthenticatedEventsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/band': typeof BandRoute
   '/reset-password': typeof ResetPasswordRoute
-  '/connections': typeof AuthenticatedConnectionsRouteWithChildren
   '/discovery': typeof AuthenticatedDiscoveryRoute
-  '/events': typeof AuthenticatedEventsRouteWithChildren
   '/onboarding': typeof AuthenticatedOnboardingRoute
   '/sync': typeof AuthenticatedSyncRoute
   '/you': typeof AuthenticatedYouRoute
@@ -144,6 +158,8 @@ export interface FileRoutesByTo {
   '/events/$eventId': typeof AuthenticatedEventsEventIdRoute
   '/events/new': typeof AuthenticatedEventsNewRoute
   '/match/$matchId': typeof AuthenticatedMatchMatchIdRoute
+  '/connections': typeof AuthenticatedConnectionsIndexRoute
+  '/events': typeof AuthenticatedEventsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -163,6 +179,8 @@ export interface FileRoutesById {
   '/_authenticated/events/$eventId': typeof AuthenticatedEventsEventIdRoute
   '/_authenticated/events/new': typeof AuthenticatedEventsNewRoute
   '/_authenticated/match/$matchId': typeof AuthenticatedMatchMatchIdRoute
+  '/_authenticated/connections/': typeof AuthenticatedConnectionsIndexRoute
+  '/_authenticated/events/': typeof AuthenticatedEventsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -182,15 +200,15 @@ export interface FileRouteTypes {
     | '/events/$eventId'
     | '/events/new'
     | '/match/$matchId'
+    | '/connections/'
+    | '/events/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/auth'
     | '/band'
     | '/reset-password'
-    | '/connections'
     | '/discovery'
-    | '/events'
     | '/onboarding'
     | '/sync'
     | '/you'
@@ -199,6 +217,8 @@ export interface FileRouteTypes {
     | '/events/$eventId'
     | '/events/new'
     | '/match/$matchId'
+    | '/connections'
+    | '/events'
   id:
     | '__root__'
     | '/'
@@ -217,6 +237,8 @@ export interface FileRouteTypes {
     | '/_authenticated/events/$eventId'
     | '/_authenticated/events/new'
     | '/_authenticated/match/$matchId'
+    | '/_authenticated/connections/'
+    | '/_authenticated/events/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -313,12 +335,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedChatConversationIdRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/connections/': {
+      id: '/_authenticated/connections/'
+      path: '/'
+      fullPath: '/connections/'
+      preLoaderRoute: typeof AuthenticatedConnectionsIndexRouteImport
+      parentRoute: typeof AuthenticatedConnectionsRoute
+    }
     '/_authenticated/connections/$connectionId': {
       id: '/_authenticated/connections/$connectionId'
       path: '/$connectionId'
       fullPath: '/connections/$connectionId'
       preLoaderRoute: typeof AuthenticatedConnectionsConnectionIdRouteImport
       parentRoute: typeof AuthenticatedConnectionsRoute
+    }
+    '/_authenticated/events/': {
+      id: '/_authenticated/events/'
+      path: '/'
+      fullPath: '/events/'
+      preLoaderRoute: typeof AuthenticatedEventsIndexRouteImport
+      parentRoute: typeof AuthenticatedEventsRoute
     }
     '/_authenticated/events/$eventId': {
       id: '/_authenticated/events/$eventId'
@@ -346,12 +382,14 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedConnectionsRouteChildren {
   AuthenticatedConnectionsConnectionIdRoute: typeof AuthenticatedConnectionsConnectionIdRoute
+  AuthenticatedConnectionsIndexRoute: typeof AuthenticatedConnectionsIndexRoute
 }
 
 const AuthenticatedConnectionsRouteChildren: AuthenticatedConnectionsRouteChildren =
   {
     AuthenticatedConnectionsConnectionIdRoute:
       AuthenticatedConnectionsConnectionIdRoute,
+    AuthenticatedConnectionsIndexRoute: AuthenticatedConnectionsIndexRoute,
   }
 
 const AuthenticatedConnectionsRouteWithChildren =
@@ -362,11 +400,13 @@ const AuthenticatedConnectionsRouteWithChildren =
 interface AuthenticatedEventsRouteChildren {
   AuthenticatedEventsEventIdRoute: typeof AuthenticatedEventsEventIdRoute
   AuthenticatedEventsNewRoute: typeof AuthenticatedEventsNewRoute
+  AuthenticatedEventsIndexRoute: typeof AuthenticatedEventsIndexRoute
 }
 
 const AuthenticatedEventsRouteChildren: AuthenticatedEventsRouteChildren = {
   AuthenticatedEventsEventIdRoute: AuthenticatedEventsEventIdRoute,
   AuthenticatedEventsNewRoute: AuthenticatedEventsNewRoute,
+  AuthenticatedEventsIndexRoute: AuthenticatedEventsIndexRoute,
 }
 
 const AuthenticatedEventsRouteWithChildren =

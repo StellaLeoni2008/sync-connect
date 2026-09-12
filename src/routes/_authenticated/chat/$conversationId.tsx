@@ -7,7 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 import type { Tables } from "@/integrations/supabase/types";
 import { getRevealedProfile } from "@/lib/sync.functions";
 
-export const Route = createFileRoute("/_authenticated/chat/$conversationId")({ component: Chat });
+export const Route = createFileRoute("/_authenticated/chat/$conversationId")({head:()=>({meta:[{title:"Private chat — SYNC"},{name:"description",content:"A private conversation with your mutual SYNC connection."},{property:"og:title",content:"Private chat — SYNC"},{property:"og:description",content:"Messages visible only to mutual SYNC connections."},{property:"og:type",content:"website"},{name:"twitter:card",content:"summary"}]}), component: Chat });
 function Chat(){
   const {user}=Route.useRouteContext(); const {conversationId}=Route.useParams();
   const [messages,setMessages]=useState<Tables<"messages">[]>([]); const [name,setName]=useState("Connection"); const [connectionId,setConnectionId]=useState<string|null>(null); const [sending,setSending]=useState(false); const [problem,setProblem]=useState("");
