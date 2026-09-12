@@ -868,12 +868,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      can_view_profile: { Args: { target_user: string }; Returns: boolean }
-      confirm_meeting: { Args: { p_match_id: string }; Returns: string }
-      respond_to_match: {
-        Args: { p_match_id: string; p_response: string }
-        Returns: string
-      }
+      [_ in never]: never
     }
     Enums: {
       [_ in never]: never
