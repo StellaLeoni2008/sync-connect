@@ -1,3 +1,4 @@
+import syncLogo from "@/assets/sync-logo.png.asset.json";
 import { cn } from "@/lib/utils";
 
 export function SyncMark({ className }: { className?: string }) {
@@ -20,4 +21,7 @@ export function SyncLogo({ className, mark = false }: { className?: string; mark
       </svg>
     </span>
   );
+}
+export function SyncWordmark({ className }: { className?: string }) {
+  return <img src={syncLogo.url} alt="SYNC" className={cn("h-7 w-auto select-none sm:h-8", className)} draggable={false} />;
 }
