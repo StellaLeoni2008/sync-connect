@@ -36,12 +36,10 @@ const COLORS: BandColor[] = [
   { id: "sky", name: "Sky", tagline: "Calm. Open. Infinite possibilities.", swatch: "#A8C4DE", img: sky.url },
   { id: "lavender", name: "Lavender", tagline: "Creative. Unique. You.", swatch: "#B9AECB", img: lavender.url },
   { id: "texas-tech-red", name: "Texas Tech Red", tagline: "Special Edition", swatch: "#C8102E", img: texasTechRed.url, special: true },
-] as const;
-
-type Color = (typeof COLORS)[number];
+];
 
 function Band() {
-  const [selected, setSelected] = useState<Color>(COLORS[0]);
+  const [selected, setSelected] = useState<BandColor>(COLORS[0]!);
 
   return (
     <main className="bg-background text-foreground">
