@@ -10,33 +10,170 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as BandRouteImport } from './routes/band'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as AuthenticatedConnectionsRouteImport } from './routes/_authenticated/connections'
+import { Route as AuthenticatedDiscoveryRouteImport } from './routes/_authenticated/discovery'
+import { Route as AuthenticatedEventsRouteImport } from './routes/_authenticated/events'
+import { Route as AuthenticatedOnboardingRouteImport } from './routes/_authenticated/onboarding'
+import { Route as AuthenticatedSyncRouteImport } from './routes/_authenticated/sync'
+import { Route as AuthenticatedYouRouteImport } from './routes/_authenticated/you'
+import { Route as AuthenticatedMatchMatchIdRouteImport } from './routes/_authenticated/match/$matchId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BandRoute = BandRouteImport.update({
+  id: '/band',
+  path: '/band',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedConnectionsRoute =
+  AuthenticatedConnectionsRouteImport.update({
+    id: '/connections',
+    path: '/connections',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedDiscoveryRoute = AuthenticatedDiscoveryRouteImport.update({
+  id: '/discovery',
+  path: '/discovery',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedEventsRoute = AuthenticatedEventsRouteImport.update({
+  id: '/events',
+  path: '/events',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedOnboardingRoute = AuthenticatedOnboardingRouteImport.update({
+  id: '/onboarding',
+  path: '/onboarding',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedSyncRoute = AuthenticatedSyncRouteImport.update({
+  id: '/sync',
+  path: '/sync',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedYouRoute = AuthenticatedYouRouteImport.update({
+  id: '/you',
+  path: '/you',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedMatchMatchIdRoute =
+  AuthenticatedMatchMatchIdRouteImport.update({
+    id: '/match/$matchId',
+    path: '/match/$matchId',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/band': typeof BandRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/connections': typeof AuthenticatedConnectionsRoute
+  '/discovery': typeof AuthenticatedDiscoveryRoute
+  '/events': typeof AuthenticatedEventsRoute
+  '/onboarding': typeof AuthenticatedOnboardingRoute
+  '/sync': typeof AuthenticatedSyncRoute
+  '/you': typeof AuthenticatedYouRoute
+  '/match/$matchId': typeof AuthenticatedMatchMatchIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/band': typeof BandRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/connections': typeof AuthenticatedConnectionsRoute
+  '/discovery': typeof AuthenticatedDiscoveryRoute
+  '/events': typeof AuthenticatedEventsRoute
+  '/onboarding': typeof AuthenticatedOnboardingRoute
+  '/sync': typeof AuthenticatedSyncRoute
+  '/you': typeof AuthenticatedYouRoute
+  '/match/$matchId': typeof AuthenticatedMatchMatchIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/auth': typeof AuthRoute
+  '/band': typeof BandRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/_authenticated/connections': typeof AuthenticatedConnectionsRoute
+  '/_authenticated/discovery': typeof AuthenticatedDiscoveryRoute
+  '/_authenticated/events': typeof AuthenticatedEventsRoute
+  '/_authenticated/onboarding': typeof AuthenticatedOnboardingRoute
+  '/_authenticated/sync': typeof AuthenticatedSyncRoute
+  '/_authenticated/you': typeof AuthenticatedYouRoute
+  '/_authenticated/match/$matchId': typeof AuthenticatedMatchMatchIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/band'
+    | '/reset-password'
+    | '/connections'
+    | '/discovery'
+    | '/events'
+    | '/onboarding'
+    | '/sync'
+    | '/you'
+    | '/match/$matchId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/auth'
+    | '/band'
+    | '/reset-password'
+    | '/connections'
+    | '/discovery'
+    | '/events'
+    | '/onboarding'
+    | '/sync'
+    | '/you'
+    | '/match/$matchId'
+  id:
+    | '__root__'
+    | '/'
+    | '/_authenticated'
+    | '/auth'
+    | '/band'
+    | '/reset-password'
+    | '/_authenticated/connections'
+    | '/_authenticated/discovery'
+    | '/_authenticated/events'
+    | '/_authenticated/onboarding'
+    | '/_authenticated/sync'
+    | '/_authenticated/you'
+    | '/_authenticated/match/$matchId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  AuthRoute: typeof AuthRoute
+  BandRoute: typeof BandRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +185,115 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/band': {
+      id: '/band'
+      path: '/band'
+      fullPath: '/band'
+      preLoaderRoute: typeof BandRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/connections': {
+      id: '/_authenticated/connections'
+      path: '/connections'
+      fullPath: '/connections'
+      preLoaderRoute: typeof AuthenticatedConnectionsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/discovery': {
+      id: '/_authenticated/discovery'
+      path: '/discovery'
+      fullPath: '/discovery'
+      preLoaderRoute: typeof AuthenticatedDiscoveryRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/events': {
+      id: '/_authenticated/events'
+      path: '/events'
+      fullPath: '/events'
+      preLoaderRoute: typeof AuthenticatedEventsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/onboarding': {
+      id: '/_authenticated/onboarding'
+      path: '/onboarding'
+      fullPath: '/onboarding'
+      preLoaderRoute: typeof AuthenticatedOnboardingRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/sync': {
+      id: '/_authenticated/sync'
+      path: '/sync'
+      fullPath: '/sync'
+      preLoaderRoute: typeof AuthenticatedSyncRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/you': {
+      id: '/_authenticated/you'
+      path: '/you'
+      fullPath: '/you'
+      preLoaderRoute: typeof AuthenticatedYouRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/match/$matchId': {
+      id: '/_authenticated/match/$matchId'
+      path: '/match/$matchId'
+      fullPath: '/match/$matchId'
+      preLoaderRoute: typeof AuthenticatedMatchMatchIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedConnectionsRoute: typeof AuthenticatedConnectionsRoute
+  AuthenticatedDiscoveryRoute: typeof AuthenticatedDiscoveryRoute
+  AuthenticatedEventsRoute: typeof AuthenticatedEventsRoute
+  AuthenticatedOnboardingRoute: typeof AuthenticatedOnboardingRoute
+  AuthenticatedSyncRoute: typeof AuthenticatedSyncRoute
+  AuthenticatedYouRoute: typeof AuthenticatedYouRoute
+  AuthenticatedMatchMatchIdRoute: typeof AuthenticatedMatchMatchIdRoute
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedConnectionsRoute: AuthenticatedConnectionsRoute,
+  AuthenticatedDiscoveryRoute: AuthenticatedDiscoveryRoute,
+  AuthenticatedEventsRoute: AuthenticatedEventsRoute,
+  AuthenticatedOnboardingRoute: AuthenticatedOnboardingRoute,
+  AuthenticatedSyncRoute: AuthenticatedSyncRoute,
+  AuthenticatedYouRoute: AuthenticatedYouRoute,
+  AuthenticatedMatchMatchIdRoute: AuthenticatedMatchMatchIdRoute,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  AuthRoute: AuthRoute,
+  BandRoute: BandRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
