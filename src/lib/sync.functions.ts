@@ -1,76 +1,151 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import { DEFAULT_RADIUS_M, parseIntent } from "@/lib/matching";
+
+const coordsSchema = z.object({
+  latitude: z.number().min(-90).max(90),
+  longitude: z.number().min(-180).max(180),
+  accuracy: z.number().nonnegative().nullable().optional(),
+  radiusMeters: z.number().int().min(50).max(5000).optional(),
+  eventId: z.string().uuid().nullable().optional(),
+});
 
 const intentSchema = z.object({
   text: z.string().trim().min(3).max(1000),
   goal: z.enum(["BUILD", "MEET", "LEARN", "HELP", "EXPLORE", "EVENT"]),
   eventId: z.string().uuid().nullable().optional(),
+  location: coordsSchema,
 });
 
-const knownSkills = ["AI", "Software", "Frontend", "Backend", "Hardware", "BLE", "Embedded Systems", "ESP32", "Design", "Product", "Business", "Marketing", "Robotics", "Research", "Startups"];
-
-function extractSkills(text: string) {
-  const normalized = text.toLowerCase();
-  return knownSkills.filter((skill) => normalized.includes(skill.toLowerCase()));
-}
+/** Writes the caller's own presence row. Coordinates are never readable by other clients. */
+export const updatePresence = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input) => coordsSchema.extend({ discoveryActive: z.boolean().optional() }).parse(input))
+  .handler(async ({ data, context }) => {
+    const { error } = await context.supabase.from("user_presence").upsert(
+      {
+        user_id: context.userId,
+        latitude: data.latitude,
+        longitude: data.longitude,
+        accuracy: data.accuracy ?? null,
+        discovery_active: data.discoveryActive ?? true,
+        sync_radius_m: data.radiusMeters ?? DEFAULT_RADIUS_M,
+        event_id: data.eventId ?? null,
+        updated_at: new Date().toISOString(),
+      },
+      { onConflict: "user_id" },
+    );
+    if (error) throw new Error(error.message);
+    return { ok: true };
+  });
 
 export const activateSync = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input) => intentSchema.parse(input))
   .handler(async ({ data, context }) => {
-    const structuredSkills = extractSkills(data.text);
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { data: intent, error: intentError } = await context.supabase.from("intents").insert({
-      user_id: context.userId,
-      original_text: data.text,
-      goal: data.goal,
-      structured_needs: structuredSkills,
-      structured_skills: structuredSkills,
-      interpretation_source: "deterministic",
-      event_id: data.eventId ?? null,
-      status: "ACTIVE",
-    }).select("id").single();
+    const parsed = parseIntent(data.text, data.goal);
+    const offeredTags = [...new Set([...parsed.desiredSkills, ...parsed.desiredActivities, ...parsed.desiredTopics])];
+
+    const { data: intent, error: intentError } = await context.supabase
+      .from("intents")
+      .insert({
+        user_id: context.userId,
+        original_text: data.text,
+        goal: data.goal,
+        structured_needs: offeredTags,
+        structured_skills: offeredTags,
+        interpretation_source: "deterministic",
+        intent_type: parsed.type,
+        desired_activities: parsed.desiredActivities,
+        desired_skills: parsed.desiredSkills,
+        desired_topics: parsed.desiredTopics,
+        desired_roles: parsed.desiredRoles,
+        keywords: parsed.keywords,
+        event_id: data.eventId ?? null,
+        status: "ACTIVE",
+      })
+      .select("id")
+      .single();
     if (intentError) throw new Error(intentError.message);
+
     await context.supabase.from("discovery_sessions").update({ state: "STOPPED", ended_at: new Date().toISOString() }).eq("user_id", context.userId).eq("state", "ACTIVE");
     const { error: discoveryError } = await context.supabase.from("discovery_sessions").insert({ user_id: context.userId, intent_id: intent.id, state: "ACTIVE" });
     if (discoveryError) throw new Error(discoveryError.message);
     await context.supabase.from("profiles").update({ discovery_enabled: true, primary_context: data.goal }).eq("id", context.userId);
 
-    const { data: mySkillsRows } = await supabaseAdmin.from("user_skills").select("skills(name)").eq("user_id", context.userId);
-    const mySkills = (mySkillsRows ?? []).flatMap((row) => {
-      const skill = row.skills as unknown as { name?: string } | null;
-      return skill?.name ? [skill.name] : [];
-    });
-    const { data: candidates } = await supabaseAdmin.from("intents").select("id,user_id,structured_needs,original_text").eq("status", "ACTIVE").neq("user_id", context.userId).order("created_at", { ascending: false }).limit(20);
-    for (const candidate of candidates ?? []) {
-      const { data: blocked } = await supabaseAdmin.from("blocked_users").select("blocker_id").or(`and(blocker_id.eq.${context.userId},blocked_id.eq.${candidate.user_id}),and(blocker_id.eq.${candidate.user_id},blocked_id.eq.${context.userId})`).limit(1);
-      if (blocked?.length) continue;
-      const { data: theirSkillRows } = await supabaseAdmin.from("user_skills").select("skills(name)").eq("user_id", candidate.user_id);
-      const theirSkills = (theirSkillRows ?? []).flatMap((row) => {
-        const skill = row.skills as unknown as { name?: string } | null;
-        return skill?.name ? [skill.name] : [];
-      });
-      const aNeeds = structuredSkills.filter((skill) => theirSkills.some((item) => item.toLowerCase() === skill.toLowerCase()));
-      const bNeeds = (candidate.structured_needs ?? []).filter((skill) => mySkills.some((item) => item.toLowerCase() === skill.toLowerCase()));
-      const overlap = aNeeds.length + bNeeds.length;
-      if (!overlap) continue;
-      const score = Math.min(98, 70 + overlap * 7 + (aNeeds.length > 0 && bNeeds.length > 0 ? 10 : 0));
-      const [userA, userB] = context.userId < candidate.user_id ? [context.userId, candidate.user_id] : [candidate.user_id, context.userId];
-      const [intentA, intentB] = userA === context.userId ? [intent.id, candidate.id] : [candidate.id, intent.id];
-      const [needsA, needsB] = userA === context.userId ? [aNeeds, bNeeds] : [bNeeds, aNeeds];
-      await supabaseAdmin.from("match_candidates").insert({ user_a_id: userA, user_b_id: userB, intent_a_id: intentA, intent_b_id: intentB, compatibility_score: score, match_reason: "Your current needs and skills complement each other.", user_a_needs: needsA, user_b_needs: needsB, status: "PENDING" });
-      await supabaseAdmin.from("notifications").insert([{ user_id: userA, kind: "STRONG_SYNC", title: "SYNC FOUND", body: "Someone nearby may be worth meeting." }, { user_id: userB, kind: "STRONG_SYNC", title: "SYNC FOUND", body: "Someone nearby may be worth meeting." }]);
-      break;
-    }
-    return { intentId: intent.id, interpretationSource: "deterministic" as const };
+    const { error: presenceError } = await context.supabase.from("user_presence").upsert(
+      {
+        user_id: context.userId,
+        latitude: data.location.latitude,
+        longitude: data.location.longitude,
+        accuracy: data.location.accuracy ?? null,
+        discovery_active: true,
+        sync_radius_m: data.location.radiusMeters ?? DEFAULT_RADIUS_M,
+        event_id: data.eventId ?? null,
+        updated_at: new Date().toISOString(),
+      },
+      { onConflict: "user_id" },
+    );
+    if (presenceError) throw new Error(presenceError.message);
+
+    const { runMatchPass } = await import("@/lib/sync-matching.server");
+    const pass = await runMatchPass(context.userId);
+    return { intentId: intent.id, interpretation: parsed, matchId: pass.createdMatchId, nearbyActiveCount: pass.nearbyActiveCount };
+  });
+
+/** Re-runs the nearby search. Safe to call on realtime events or a controlled interval. */
+export const findNearbySyncs = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { runMatchPass } = await import("@/lib/sync-matching.server");
+    const pass = await runMatchPass(context.userId);
+    return { status: pass.status, matchId: pass.createdMatchId, nearbyActiveCount: pass.nearbyActiveCount, eligibleCount: pass.candidates.filter((c) => c.eligible).length };
   });
 
 export const stopSync = createServerFn({ method: "POST" }).middleware([requireSupabaseAuth]).handler(async ({ context }) => {
   await context.supabase.from("discovery_sessions").update({ state: "STOPPED", ended_at: new Date().toISOString() }).eq("user_id", context.userId).eq("state", "ACTIVE");
   await context.supabase.from("profiles").update({ discovery_enabled: false }).eq("id", context.userId);
+  await context.supabase.from("user_presence").update({ discovery_active: false }).eq("user_id", context.userId);
   return { ok: true };
 });
+
+/** Development diagnostics for the caller only. Never exposes other users' coordinates. */
+export const getSyncDiagnostics = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { runMatchPass } = await import("@/lib/sync-matching.server");
+    const { data: presence } = await context.supabase.from("user_presence").select("*").eq("user_id", context.userId).maybeSingle();
+    const pass = await runMatchPass(context.userId);
+    return {
+      userId: context.userId,
+      presence: presence
+        ? {
+            latitude: presence.latitude,
+            longitude: presence.longitude,
+            accuracy: presence.accuracy,
+            discoveryActive: presence.discovery_active,
+            radiusMeters: presence.sync_radius_m,
+            updatedAt: presence.updated_at,
+          }
+        : null,
+      status: pass.status,
+      intentText: pass.intentText,
+      interpretation: pass.intent,
+      nearbyActiveCount: pass.nearbyActiveCount,
+      candidates: pass.candidates.map((candidate) => ({
+        userId: candidate.userId,
+        score: candidate.score,
+        eligible: candidate.eligible,
+        matched: candidate.matched,
+        reasons: candidate.reasons,
+        reciprocal: candidate.reciprocal,
+        distanceMeters: candidate.distanceMeters,
+        proximityState: candidate.proximityState,
+      })),
+      matchId: pass.createdMatchId,
+    };
+  });
 
 export const getRevealedProfile = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
