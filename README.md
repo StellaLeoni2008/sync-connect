@@ -1,1049 +1,426 @@
-# Sync Connect
-
-CRITICAL VISUAL REFERENCE — FOLLOW THE ATTACHED IMAGE
-
-The attached SYNC concept board is the PRIMARY VISUAL REFERENCE for the entire product.
-
-Use this image as the source of truth for:
-
-overall aesthetic
-
-color palette
-
-typography feeling
-
-spacing
-
-proportions
-
-mobile UI
-
-cards
-
-buttons
-
-navigation
-
-icons
-
-Band presentation
-
-photography direction
-
-light/dark contrast
-
-visual hierarchy
-
-Do NOT redesign SYNC into a generic SaaS, neon AI product, purple-gradient app, or typical social network.
-
-The final application should feel like the SAME PRODUCT shown in this reference.
-
-1. CORE VISUAL IDENTITY
-
-The aesthetic is:
-
-minimal
-premium
-monochromatic
-editorial
-modern
-human
-slightly futuristic
-fashion-tech
-consumer hardware + software
-
-Think premium industrial design rather than startup dashboard.
-
-The interface should feel calm and intentional.
-
-Avoid visual clutter.
-
-2. COLOR PALETTE — FOLLOW THE REFERENCE
-
-The primary palette is almost monochromatic.
-
-LIGHT BACKGROUND
-
-Use a warm, slightly gray off-white rather than pure white.
-
-Suggested token:
-
-#F2F1EE
-
-Alternative surfaces:
-
-#EAE9E6
-
-#F7F6F3
-
-DARK BACKGROUND
-
-Use near-black rather than completely flat black.
-
-Suggested:
-
-#080B0D
-
-Secondary dark surface:
-
-#111518
-
-Cards:
-
-#181D21
-
-Elevated cards:
-
-#20262B
-
-PRIMARY LIGHT TEXT
-
-#F4F4F1
-
-DARK TEXT
-
-#111214
-
-SECONDARY TEXT
-
-Light interface:
-
-#606164
-
-Dark interface:
-
-#A4A8AB
-
-BORDERS
-
-Extremely subtle.
-
-Light:
-
-rgba(0,0,0,0.08)
-
-Dark:
-
-rgba(255,255,255,0.08)
-
-3. ACCENT COLOR
-
-Do NOT make purple the dominant brand color.
-
-The reference is primarily:
-
-black
-white
-graphite
-warm gray
-
-Use electric blue/cyan ONLY for important technological moments.
-
-Suggested:
-
-#6BDCF5
-
-Deeper electric blue:
-
-#54AFFF
-
-The blue should appear primarily in:
-
-SYNC pulse
-
-proximity visualization
-
-match indicator
-
-lightning symbol
-
-small status lights
-
-selected states
-
-notification moments
-
-Do not flood screens with blue.
-
-The interface should remain mostly monochrome.
-
-4. SYNC GLOW
-
-For moments like:
-
-SYNC FOUND
-
-IT'S A SYNC
-
-SYNCED
-
-proximity detection
-
-use a subtle blue glow.
-
-Example:
-
-0 0 30px rgba(90, 190, 255, 0.22)
-
-Never use huge neon gradients.
-
-The effect should feel like light emitted by premium hardware.
-
-5. TYPOGRAPHY
-
-Typography should closely match the attached reference.
-
-Use a modern geometric/grotesk sans-serif.
-
-Preferred:
-
-Inter
-
-If available and appropriate:
-
-Geist
-
-Use one consistently rather than mixing many fonts.
-
-The SYNC wordmark itself should remain visually distinct from regular typography.
-
-Typography characteristics:
-
-clean
-
-modern
-
-high legibility
-
-slightly geometric
-
-not playful
-
-not overly futuristic
-
-not serif
-
-not condensed
-
-6. TYPOGRAPHIC HIERARCHY
-
-Large headlines should have:
-
-tight tracking
-
-medium/semibold weight
-
-generous negative space
-
-Examples:
-
-What are you looking for today?
-
-SYNC FOUND
-
-It's a match!
-
-The SYNC Band
-
-Do not overuse bold.
-
-Body copy should feel editorial and light.
-
-7. SYNC WORDMARK
-
-Follow the attached SYNC visual identity.
-
-The wordmark is:
-
-wide
-
-geometric
-
-minimal
-
-futuristic without looking like gaming typography
-
-Use the existing SYNC logo asset if supplied.
-
-Do NOT replace the SYNC wordmark with ordinary bold text.
-
-Create a reusable:
-
-<SyncLogo />
-
-component.
-
-Use it consistently on:
-
-landing page
-
-app header
-
-loading state
-
-authentication
-
-Band page
-
-notifications where appropriate.
-
-8. MOBILE APP — MATCH THE REFERENCE
-
-The mobile interface should closely follow the attached screens.
-
-Use:
-
-near-black background
-
-off-white typography
-
-rounded graphite cards
-
-thin understated borders
-
-small monochrome icons
-
-compact bottom navigation
-
-large negative space
-
-minimal blue illumination
-
-Avoid giant colorful UI elements.
-
-9. INTENT SCREEN
-
-Match the first phone screen from the reference.
-
-Header:
+<div align="center">
+<img src="src/assets/sync-logo.png" alt="SYNC Logo" width="220"/>
 
 SYNC
 
-Question:
+Find the right people around you — in real life.
 
-What are you looking for today?
+SYNC is a proximity-first networking platform designed to turn the people around you into meaningful real-world connections.
 
-Intent modes should visually resemble the reference:
+Instead of scrolling through endless profiles, users tell SYNC what they are looking for, discover relevant people nearby, and connect when there is mutual interest.
 
-Build
+</div>
 
-Meet
+⸻
 
-Learn
+💡 Inspiration
 
-Help
+The right person is often already in the same room.
 
-Explore
+At hackathons, universities, conferences, coworking spaces, and social events, people are surrounded by potential collaborators, mentors, friends, and teammates — but they have no easy way to know who they should meet.
 
-Event
+Existing social platforms help us connect with people online, but they often make us spend even more time looking at a screen.
 
-Each appears as a dark rounded horizontal option.
+We wanted to build the opposite.
 
-Include:
+SYNC uses technology to help you find the right person around you — and then gets out of the way.
 
-small line icon
+⸻
 
-title
+🎯 The Problem
 
-short description
+Imagine being at a hackathon and needing someone who knows hardware.
 
-The selected state should be subtle.
+There could be a hardware engineer sitting 20 feet away from you.
 
-Below/after selection allow the natural-language Intent input.
+At the same time, that person might be looking for someone who knows AI — which happens to be your skill.
 
-Example:
+You are a perfect match.
 
-Tell SYNC what you need.
+But unless one of you randomly starts a conversation, you may never meet.
+
+SYNC solves that discovery problem.
+
+⸻
+
+⚡ What is SYNC?
+
+SYNC is a platform for discovering people nearby based on:
+
+* Skills
+* Interests
+* Goals
+* What they want to learn
+* What they can teach
+* What they need
+* What they can offer
+* Current intent
+* Proximity
+
+Users can choose what they are looking for:
+
+Build · Meet · Learn · Help · Explore · Event
+
+They can also simply describe it naturally:
 
 “I need someone who understands BLE hardware.”
 
-CTA:
+SYNC looks for people nearby whose profiles and intentions complement that request.
 
-START SYNCING
+When a relevant person is found, both users can decide whether they want to connect.
 
-10. DISCOVERY VISUAL
+If both accept:
 
-Follow the visual language of the second phone in the reference.
+It’s a SYNC. ⚡
 
-Create an abstract proximity field.
+⸻
 
-IMPORTANT:
+🔄 How It Works
 
-This is NOT a military radar.
+1. Create your profile
 
-Use:
+Tell SYNC about your skills, interests, goals, and what you want to learn or offer.
 
-thin concentric circles
+2. Tell SYNC what you need
 
-extremely subtle grid
+Choose an intent or describe exactly what you’re looking for.
 
-small glowing points
+3. Start SYNCing
 
-soft blue illumination
+SYNC searches for relevant people nearby.
 
-minimal movement
+4. Discover a signal
 
-The visualization represents:
+Potential matches can appear through the proximity discovery experience.
 
-human signals around you
+Before mutual consent, discovery is designed to protect the user’s identity.
 
-not geographic tracking.
+5. Request a SYNC
 
-Before mutual consent, do NOT show identifiable profile photos.
+If someone seems relevant, send them a SYNC request.
 
-Use anonymous signal nodes instead.
+6. Mutual connection
 
-This is an important privacy correction compared with the concept artwork.
+When both people are interested, their connection is unlocked.
 
-11. SYNC FOUND
+7. Meet in real life
 
-Closely follow the third phone.
+Users can access their connection, profile, and chat and turn the digital match into a real conversation.
 
-Dark background.
+⸻
 
-Center:
+✨ Features
 
-glowing electric-blue SYNC lightning symbol
+📡 Proximity Discovery
 
-subtle concentric pulse circles
+Discover other SYNC users nearby through an interactive proximity-based experience.
 
-Headline:
+🧠 Intent-Based Matching
 
-SYNC FOUND
+SYNC doesn’t just ask who is nearby.
 
-Copy:
+It asks:
 
-Someone nearby has exactly what you're looking for.
+Who nearby could actually be relevant to you?
 
-Compatibility card:
+🛠 Skills & Interests
 
-92% match
+Profiles communicate what users know, what they want to learn, and what they are looking for.
 
-Then:
+⚡ SYNC Requests
 
-YOU NEED
+Send connection requests directly to people you discover.
 
-Hardware
+🤝 Connections
 
-THEY NEED
+Keep the people you’ve SYNCed with accessible after meeting them.
 
-AI / Software
+💬 Chat
 
-Large white button:
+Connected users can continue their conversations inside SYNC.
 
-I'm interested
+📅 Events
 
-Secondary dark button:
+Create and discover events where people can meet, collaborate, and SYNC.
 
-Not now
+👤 Customizable Profiles
 
-No identity yet.
+Users can edit their information, interests, skills, and goals as they change.
 
-12. MUTUAL MATCH
+🔔 Notifications
 
-Follow the fourth phone's visual language while preserving our real privacy logic.
+Users can receive notifications for nearby opportunities and incoming SYNC requests.
 
-Once BOTH real people accept:
+📱 Mobile-First Experience
 
-show:
+SYNC is designed around real-world movement and interaction, with a responsive interface optimized for mobile devices.
 
-two real profile images
+⸻
 
-connection symbol between them
+🔐 Privacy by Design
 
-Headline:
+Proximity should help people connect — not become surveillance.
 
-It's a SYNC!
+SYNC is designed around mutual consent.
 
-Copy:
+Before two people mutually connect:
 
-You're both interested. Go meet in person.
+* Exact stranger locations should not be exposed
+* Exact distance should not be displayed
+* Personal identity can remain protected during discovery
+* Users control whether they want to connect
 
-Do NOT display exact meters.
+Instead of exposing precise location, SYNC can communicate approximate proximity through states such as:
 
-Replace the concept image's:
+NEARBY · CLOSE · VERY CLOSE
 
-“8 meters away”
+Technology creates the opportunity.
 
-with:
+Consent creates the connection.
 
-VERY CLOSE
+⸻
 
-or:
+⌚ The SYNC Band
 
-CLOSE
+SYNC isn’t limited to the phone.
 
-Do not expose exact location.
+Our vision includes the SYNC Band — a minimal, screenless wearable designed to make real-world discovery even more natural.
 
-CTA:
+The Band is designed to work alongside the SYNC ecosystem and make proximity-based connections possible without constantly checking a phone.
 
-Meet Now
+SYNC Band Concept
 
-13. PROFILE / CONNECTION
+* Proximity detection
+* Works with the SYNC app
+* Subtle haptic feedback
+* Screenless design
+* Lightweight and comfortable
+* Long battery life
+* Minimal premium appearance
+* Multiple physical colors
 
-Follow the visual simplicity of the fifth phone.
+The goal is simple:
 
-Use the LIGHT theme for connection/profile views when appropriate.
+Looks like an accessory. Built for real connections.
 
-Warm off-white background.
+⸻
 
-Black typography.
+🎨 Design Philosophy
 
-Real circular photo.
+SYNC follows a deliberate visual transition.
 
-Name.
+Before connection
 
-Role.
+Dark. Anonymous. Technological.
 
-Skill chips.
+Users see signals, proximity, and possibilities.
 
-Short bio.
+After connection
 
-Meeting context.
+Light. Human. Personal.
 
-Example:
+Once people mutually connect, the person becomes more important than the technology.
 
-Met at
+This creates the central design philosophy of SYNC:
 
-HackWesTX
+Technology should create the connection — then disappear.
 
-Date
+⸻
 
-Then:
+🛠 Tech Stack
 
-You connected because
+SYNC is built with:
 
-[real matching explanation]
+* React 19
+* TypeScript
+* TanStack Start
+* TanStack Router
+* TanStack Query
+* Vite
+* Tailwind CSS 4
+* Supabase
+* Radix UI
+* Lucide React
+* Zod
+* React Hook Form
+* Lovable Cloud Auth
 
-CTA:
+⸻
 
-Keep in touch
+📂 Project Structure
 
-This creates contrast:
+src/
+├── assets/
+│   └── SYNC and Band assets
+│
+├── components/
+│   └── Reusable UI components
+│
+├── hooks/
+│   └── Custom React hooks
+│
+├── integrations/
+│   └── Service integrations
+│
+├── lib/
+│   └── Shared application logic
+│
+└── routes/
+    ├── auth
+    ├── band
+    └── _authenticated/
+        ├── sync
+        ├── discovery
+        ├── connections
+        ├── chat
+        ├── events
+        ├── onboarding
+        ├── edit-profile
+        └── you
 
-Discovery = dark
+⸻
 
-Established human connection = light
+🚀 Running SYNC Locally
 
-Use this intentionally throughout the product.
+Requirements
 
-14. DARK → LIGHT STORY
+Make sure you have installed:
 
-Use the attached reference's contrast as part of the product story.
+* Node.js
+* npm
 
-Before connection:
+Clone the repository
 
-DARK
+git clone https://github.com/StellaLeoni2008/sync-connect.git
 
-mysterious
+Enter the project:
 
-anonymous
+cd sync-connect
 
-signals
+Install dependencies:
 
-discovery
+npm install
 
-After connection:
+Start the development server:
 
-LIGHT
+npm run dev
 
-human
+Open the local address provided by Vite in your browser.
 
-personal
+⸻
 
-clear
+💻 Available Commands
 
-warm
+npm run dev
 
-This transition should subtly communicate:
+Starts the development server.
 
-technology disappears and the person becomes the focus.
+npm run build
 
-This is a major visual principle of SYNC.
+Creates the production build.
 
-15. CARDS
+npm run preview
 
-Cards should resemble the attached app.
+Previews the production build.
 
-Use approximately:
+npm run lint
 
-border-radius: 16–20px
+Runs ESLint.
 
-Dark cards:
+npm run format
 
-graphite rather than black.
+Formats the project using Prettier.
 
-Very subtle borders.
+⸻
 
-Minimal shadows.
+🌎 Where SYNC Can Be Used
 
-No glassmorphism everywhere.
+SYNC starts with environments where people already have a reason to connect:
 
-No giant gradients.
+Hackathons
 
-Cards should feel physically substantial but quiet.
+Find teammates, developers, designers, hardware experts, mentors, and collaborators.
 
-16. BUTTONS
+Universities
 
-Primary dark-screen CTA:
+Discover classmates, study partners, people learning the same subjects, and students with complementary skills.
 
-white background
+Conferences
 
-near-black text
+Turn hundreds of strangers into relevant professional opportunities.
 
-rounded/pill shape
+Coworking Spaces
 
-Example:
-
-I'm interested
-
-Secondary:
-
-dark graphite
-
-off-white text
-
-Important SYNC-specific actions may use the blue accent sparingly.
-
-Do NOT make every CTA purple or blue.
-
-17. BOTTOM NAVIGATION
-
-Follow the compact navigation style from the reference.
-
-Use four primary destinations:
-
-SYNC
-
-Connections
+Discover people working on similar problems around you.
 
 Events
 
-You
+Help attendees discover the people they actually came to meet.
 
-Do NOT reproduce the reference's Map navigation because our final product architecture does not require a public map.
+And eventually:
 
-Use thin Lucide-style icons.
+Everyday life.
 
-Selected state:
+⸻
 
-slightly elevated circular/soft background.
+🔮 What’s Next
 
-Keep it compact.
+The long-term vision for SYNC goes beyond simple matching.
 
-18. PHOTOGRAPHY
+Future possibilities include:
 
-Photography should match the attached concept board.
+* Smarter AI-powered compatibility
+* Improved proximity technology
+* SYNC Band integration
+* Event-specific discovery
+* Community spaces
+* Better contextual matching
+* Connection history
+* SYNC Points and rewards
+* Recommendations based on meaningful real-world interactions
 
-Use:
+Instead of rewarding endless scrolling, SYNC can reward something different:
 
-real people
+meeting people.
 
-real-world environments
+The more meaningful connections you make, the more your SYNC network grows.
 
-events
+⸻
 
-hackathons
+❤️ Why We Built SYNC
 
-conferences
+Social technology has spent years optimizing one behavior:
 
-campuses
+scrolling.
 
-coworking
+More content.
 
-urban social spaces
+More feeds.
 
-warm cinematic lighting
+More time on the screen.
 
-shallow depth of field
+We wanted to explore a different future.
 
-candid interactions
+One where technology doesn’t replace human interaction.
 
-Avoid:
+It starts it.
 
-corporate stock photography
+The person you’re looking for might not be somewhere on the internet.
 
-people staring at laptops
+They might already be standing next to you.
 
-fake business handshakes
+⸻
 
-overly posed models
+<div align="center">
 
-The product is about:
+You don’t have to scroll to find the right people.
 
-people meeting people.
+They’re already here.
 
-19. SYNC BAND — MATCH THE REFERENCE
+⚡
 
-Use the attached Band as the visual direction.
+SYNC
 
-The Band should be:
+Real people. Real proximity. Real connection.
 
-very thin
-
-screenless
-
-minimal
-
-premium
-
-fashionable
-
-subtle
-
-The central electronics should almost disappear into the strap.
-
-NO smartwatch screen.
-
-NO Apple Watch-like body.
-
-NO bulky fitness tracker.
-
-NO exact WHOOP copy.
-
-Keep the design original to SYNC.
-
-20. BAND COLORS
-
-Match the softer physical palette from the reference:
-
-Midnight
-
-near-black
-
-Sand
-
-warm cream
-
-Rose
-
-muted coral/pink
-
-Olive
-
-desaturated green
-
-Sky
-
-soft powder blue
-
-Lavender
-
-muted lavender
-
-These are PHYSICAL PRODUCT colors.
-
-Do not use all these colors throughout the software UI.
-
-Software remains primarily monochromatic.
-
-21. BAND PRODUCT SECTION
-
-Follow the composition shown in the attached reference.
-
-Light warm background.
-
-Left:
-
-The SYNC Band
-
-Small. Smart. Always with you.
-
-Feature icons:
-
-Detects proximity
-
-Works with the app
-
-Long battery life
-
-Lightweight & comfortable
-
-Center:
-
-large premium Band render.
-
-Right/center:
-
-all Band color variants.
-
-Include a lifestyle image showing the Band naturally on a wrist.
-
-Copy:
-
-Looks like an accessory.
-
-Built for real connections.
-
-22. BAND IMAGERY
-
-Use the attached image as a visual reference for generating/creating ORIGINAL SYNC Band imagery.
-
-Do not use competitor photography.
-
-Required imagery:
-
-hero Band
-
-Midnight
-
-Sand
-
-Rose
-
-Olive
-
-Sky
-
-Lavender
-
-all colors together
-
-Band on wrist
-
-Band + phone
-
-Band close-up
-
-Band subtle haptic light
-
-Maintain consistent industrial design across every image.
-
-Do not accidentally generate different Band shapes for each color.
-
-23. LANDING PAGE COMPOSITION
-
-Use the concept board as inspiration for the actual website composition.
-
-Mix:
-
-large editorial typography
-
-product screenshots
-
-cinematic photography
-
-light sections
-
-dark sections
-
-Band product imagery
-
-short statements
-
-Do NOT turn the landing page into 20 identical rounded SaaS cards.
-
-The page should feel more like:
-
-a premium product campaign
-
-than:
-
-a startup template.
-
-24. HUMAN STORY SECTIONS
-
-Use large photographic sections.
-
-Example:
-
-From events to everyday life.
-
-Hackathons, conferences, campuses, coworking spaces — and eventually everyday environments.
-
-Another section:
-
-More human connections.
-
-A more open world.
-
-Another:
-
-You don't have to scroll to find the right people.
-
-They're already here.
-
-Use large typography and negative space.
-
-25. NOTIFICATION VISUAL
-
-Create a section similar to the reference showing a phone receiving a SYNC notification.
-
-Notification:
-
-⚡ SYNC
-
-Someone nearby might be exactly who you're looking for.
-
-92% match
-
-This is a PRODUCT VISUALIZATION.
-
-In the actual functioning product, percentages and notifications must come from real backend matches.
-
-Never hardcode this as live user activity.
-
-26. LIGHTNING MARK
-
-Create/use a minimal geometric lightning/signal symbol as the SYNC match icon.
-
-It should feel:
-
-precise
-
-premium
-
-technological
-
-simple
-
-Use blue illumination around it on dark backgrounds.
-
-Do not make it look like a gaming/esports logo.
-
-27. SPACING
-
-Use generous spacing.
-
-Sections should breathe.
-
-Mobile:
-
-16–24px horizontal padding.
-
-Desktop landing sections:
-
-large vertical spacing.
-
-Avoid filling every available area.
-
-Empty space is part of the design.
-
-28. ICONOGRAPHY
-
-Use thin outline icons.
-
-Prefer Lucide icons where possible.
-
-Consistent stroke width.
-
-Mostly monochrome.
-
-Avoid emoji as permanent UI icons.
-
-The ⚡ symbol can conceptually represent SYNC, but use the proper designed SYNC mark in polished UI.
-
-29. IMPORTANT PRIVACY DIFFERENCES FROM THE REFERENCE
-
-The attached image is the VISUAL reference, not the final behavioral specification.
-
-Keep our previously defined privacy rules.
-
-Therefore:
-
-Do NOT show nearby people's photos during scanning.
-
-Do NOT show exact meters.
-
-Do NOT expose someone's identity before mutual consent.
-
-Do NOT create a map showing the precise location of strangers.
-
-Use:
-
-anonymous signals before consent.
-
-Real identity only after mutual consent.
-
-Approximate states:
-
-NEARBY
-
-CLOSE
-
-VERY CLOSE.
-
-30. DO NOT CHANGE THIS DESIGN DIRECTION
-
-Do NOT decide to:
-
-make everything purple
-
-add rainbow gradients
-
-use glassmorphism everywhere
-
-use huge glowing borders
-
-turn it into a SaaS dashboard
-
-use a Tinder card interface
-
-use Instagram-style profiles
-
-use LinkedIn-style layouts
-
-use Discord aesthetics
-
-add excessive gamification
-
-add unnecessary illustrations
-
-The attached reference already establishes the visual identity.
-
-FOLLOW IT.
-
-FINAL DESIGN PRINCIPLE
-
-When making any visual decision, ask:
-
-“Would this element look like it belongs in the attached SYNC concept board?”
-
-If not, redesign it.
-
-The final application should immediately feel like the digital product and physical product shown in the attached reference.
-
-Preserve:
-
-the black/off-white palette
-
-the geometric typography
-
-the restrained blue accent
-
-the rounded graphite mobile UI
-
-the editorial white sections
-
-the thin screenless Band
-
-the cinematic human photography
-
-the generous negative space
-
-and the transition from anonymous technology to human connection.
-
-SYNC should feel like:
-
-a premium piece of consumer technology designed to make technology less visible.
-
-This project was built with [Lovable](https://lovable.dev).
-
-## Build with Lovable
-
-Continue developing this project in the [Lovable editor](https://lovable.dev/projects/edc5ab91-4e5a-452d-b485-91b906216f03).
-
-- **Ship faster**: describe what you want to build and Lovable handles the code.
-- **Stay in sync**: every change made in Lovable is committed straight to this repository.
-- **Full ownership**: this code is yours. Push to `main` on GitHub and your changes sync back into Lovable, ready for your next prompt.
-
-## Development
-
-Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
-
-```sh
-git clone <this-repository-url>
-cd <repository-name>
-npm i
-npm run dev
-```
+</div>
