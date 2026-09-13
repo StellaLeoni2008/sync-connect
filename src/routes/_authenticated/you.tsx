@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { supabase } from "@/integrations/supabase/client";
+import { askForNotifications, notificationsSupported } from "@/lib/notifications";
+import { ensurePushSubscription, pushSupported } from "@/lib/push";
 
 export const Route = createFileRoute("/_authenticated/you")({
   head: () => ({ meta: [{ title: "Your profile — SYNC" }, { name: "description", content: "Manage your SYNC profile, interests, and notification preferences." }, { property: "og:title", content: "Your profile — SYNC" }, { property: "og:description", content: "Manage what SYNC can match you on." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }] }),
@@ -27,6 +29,12 @@ function You() {
   const [saved, setSaved] = useState(false);
   const [upgrade, setUpgrade] = useState({ email: "", password: "" });
   const [upgradeMessage, setUpgradeMessage] = useState("");
+  const [pushState, setPushState] = useState<"unsupported" | "default" | "granted" | "denied">("default");
+
+  useEffect(() => {
+    if (!notificationsSupported() || !pushSupported()) { setPushState("unsupported"); return; }
+    setPushState(Notification.permission as "default" | "granted" | "denied");
+  }, []);
 
   useEffect(() => {
     supabase.from("profiles").select("name,hobbies,interests,can_help_with").eq("id", user.id).single().then(({ data }) => {
@@ -40,6 +48,18 @@ function You() {
     const next = { ...prefs, [k]: v };
     setPrefs(next);
     await supabase.from("notification_preferences").upsert({ user_id: user.id, ...next });
+    // Turning an alert on is the right moment to ask for permission, once.
+    if (v && k !== "haptics") {
+      const outcome = await askForNotifications();
+      setPushState(outcome === "granted" ? "granted" : outcome === "denied" ? "denied" : "default");
+      if (outcome === "granted") await ensurePushSubscription();
+    }
+  }
+
+  async function enablePush() {
+    const outcome = await askForNotifications();
+    setPushState(outcome === "granted" ? "granted" : outcome === "denied" ? "denied" : "default");
+    if (outcome === "granted") await ensurePushSubscription();
   }
 
   async function saveTags() {
@@ -95,6 +115,15 @@ function You() {
             <Switch checked={prefs.haptics} onCheckedChange={(next) => change("haptics", next)} />
           </label>
           <p className="text-xs text-muted-foreground">Nearby alerts are limited to one every 30 minutes.</p>
+          {pushState === "granted" ? (
+            <p className="mt-3 text-xs text-muted-foreground">Alerts are on for this device, even when SYNC is closed.</p>
+          ) : pushState === "denied" ? (
+            <p className="mt-3 text-xs text-muted-foreground">Alerts are blocked in your browser settings for SYNC. Allow notifications there to turn them back on.</p>
+          ) : pushState === "default" ? (
+            <Button variant="outline" className="mt-4" onClick={enablePush}>Allow alerts on this device</Button>
+          ) : (
+            <p className="mt-3 text-xs text-muted-foreground">This browser can’t show alerts while SYNC is closed. Everything still works inside the app.</p>
+          )}
         </div>
 
         <details className="mt-3 rounded-2xl border border-border bg-card p-5">

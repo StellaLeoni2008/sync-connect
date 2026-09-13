@@ -178,6 +178,10 @@ export async function runMatchPass(userId: string): Promise<MatchPassResult> {
           { user_id: userA, kind: "STRONG_SYNC", title: "SYNC FOUND", body: "Someone nearby may be worth meeting.", match_id: createdMatchId },
           { user_id: userB, kind: "STRONG_SYNC", title: "SYNC FOUND", body: "Someone nearby may be worth meeting.", match_id: createdMatchId },
         ]);
+        const { pushToUser } = await import("@/lib/push.server");
+        await Promise.all([userA, userB].map((userId) =>
+          pushToUser(userId, "STRONG_SYNC", { title: "SYNC FOUND", body: "Someone nearby may be worth meeting.", url: "/sync", tag: `sync-${createdMatchId}` }),
+        ));
       }
     }
   }

@@ -4,6 +4,7 @@ import { ArrowLeft, CalendarDays, MapPin, UsersRound } from "lucide-react";
 import { AppShell } from "@/components/layout/app-shell";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
+import { notifyEventUpdate } from "@/lib/push.functions";
 import type { Tables } from "@/integrations/supabase/types";
 
 export const Route = createFileRoute("/_authenticated/events/$eventId")({
@@ -66,6 +67,7 @@ function EventDetail() {
   async function cancel() {
     if (!event || event.organizer_id !== user.id) return;
     await supabase.from("events").update({ status: "CANCELLED" }).eq("id", eventId);
+    void notifyEventUpdate({ data: { eventId, title: `${event.name} was cancelled`, body: "The organizer cancelled this event." } }).catch(() => {});
     await load();
   }
 

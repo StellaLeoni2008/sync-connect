@@ -3,6 +3,7 @@ import { CalendarDays, Radio, UserRound, UsersRound } from "lucide-react";
 import { useEffect, useState, type ReactNode } from "react";
 import { SyncWordmark } from "@/components/brand/sync-logo";
 import { supabase } from "@/integrations/supabase/client";
+import { ensurePushSubscription, registerPushWorker } from "@/lib/push";
 
 const tabs = [
   { to: "/sync", label: "SYNC", icon: Radio },
@@ -45,6 +46,11 @@ function useRequestBadge() {
 export function AppShell({ children, light = false }: { children: ReactNode; light?: boolean }) {
   const pathname = useRouterState({ select: (state) => state.location.pathname });
   const requests = useRequestBadge();
+  // Keeps the installed app / browser registered for background push on every visit.
+  useEffect(() => {
+    registerPushWorker();
+    void ensurePushSubscription();
+  }, []);
   return (
     <div className={light ? "min-h-dvh bg-background text-foreground" : "dark min-h-dvh bg-background text-foreground"}>
       <div className="mx-auto flex min-h-dvh w-full max-w-3xl flex-col border-border md:border-x">
