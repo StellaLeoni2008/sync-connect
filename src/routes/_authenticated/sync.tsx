@@ -10,6 +10,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useProximity, type Fix } from "@/hooks/use-proximity";
 import { vibrateSync } from "@/lib/haptics";
 import { askForNotifications, notify } from "@/lib/notifications";
+import { ensurePushSubscription } from "@/lib/push";
 import { DEFAULT_RADIUS_M, RADIUS_OPTIONS_M } from "@/lib/matching";
 import {
   getNearbyPeople,
@@ -120,7 +121,7 @@ function SyncRadar() {
   async function start() {
     setError("");
     setStarting(true);
-    void askForNotifications();
+    void askForNotifications().then(() => ensurePushSubscription());
     const current = fix && Date.now() - fix.at < 60000 ? fix : await requestFix();
     if (!current) {
       setStarting(false);
