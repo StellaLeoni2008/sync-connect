@@ -1,11 +1,41 @@
 <div align="center">
 <img width="1774" height="887" alt="image" src="https://github.com/user-attachments/assets/6a4e6c6a-73df-40ff-9376-cb56aac6fc40" />
-   
-### Stop scrolling. Start connecting.
 
+<br>
+
+### Stop scrolling. Start connecting.
 **SYNC helps you discover the right people around you based on proximity, skills, interests, and what you're looking for right now.**
 
+<br>
+
+### 🏆 Built for HackWesTX 2026 — Beyond the Feed
+
+**Texas Tech University · 2026**
+
+<br>
+
+### 🔗 Project Links
+
+🌐 **[Try SYNC Live](https://syncconnect.lovable.app)**
+
+🏆 **[View SYNC on Devpost](DEV)**
+
+💻 **[View Source Code on GitHub](https://github.com/StellaLeoni2008/sync-connect)**
+
 </div>
+
+---
+
+## 🎥 Demo
+
+See SYNC in action — from discovering someone nearby to making a real-world connection.
+
+### ▶️ [Watch the Demo](https://www.youtube.com/watch?v=0Sx3QPb7aXU)
+
+**Demo flow:**
+`Create Profile → Set Intent → Discover → Request SYNC → Accept → It's a SYNC → Chat`
+
+---
 
 ## 🌎 What is SYNC?
 
@@ -37,7 +67,7 @@ Tell SYNC what you're looking for, discover relevant people nearby, send a SYNC 
 4. **Send a SYNC request**
    Found someone interesting? Request to connect.
 
-5. **It's a SYNC!**
+5. **It's a SYNC! ⚡**
    When both people accept, the connection is unlocked.
 
 6. **Meet & Chat**
@@ -60,15 +90,76 @@ Tell SYNC what you're looking for, discover relevant people nearby, send a SYNC 
 
 ---
 
-## 🔐 Privacy
+# 🚀 Build & Run
+
+### Requirements
+
+* Node.js
+* npm
+* Git
+
+### 1. Clone the repository
+
+```bash id="y6gkcn"
+git clone https://github.com/StellaLeoni2008/sync-connect.git
+```
+
+### 2. Enter the project
+
+```bash id="d1mq8k"
+cd sync-connect
+```
+
+### 3. Install dependencies
+
+```bash id="3uafze"
+npm install
+```
+
+### 4. Start the development server
+
+```bash id="4hij8f"
+npm run dev
+```
+
+Open the local URL displayed in your terminal.
+
+### Production Build
+
+```bash id="3rfg2z"
+npm run build
+npm run preview
+```
+
+---
+
+## 🛠 Tech Stack
+
+SYNC was built with:
+
+* **React 19**
+* **TypeScript**
+* **TanStack Start**
+* **TanStack Router**
+* **TanStack Query**
+* **Vite**
+* **Tailwind CSS**
+* **Supabase**
+* **Radix UI**
+* **Lucide React**
+* **Lovable**
+
+---
+
+## 🔐 Privacy by Design
 
 SYNC is built around **mutual consent**.
 
 Before a connection is accepted, SYNC is designed to avoid exposing unnecessary personal or precise location information.
 
-The goal is simple:
+Instead of turning proximity into surveillance, SYNC uses technology to create an opportunity for two people to connect.
 
-**Help people discover each other without turning proximity into surveillance.**
+**Technology creates the opportunity. Consent creates the connection.**
 
 ---
 
@@ -76,126 +167,21 @@ The goal is simple:
 
 Our vision also includes the **SYNC Band** — a minimal, screenless wearable designed to make real-world discovery even more natural.
 
-The Band is designed to work with the SYNC ecosystem using proximity detection and subtle feedback, allowing technology to stay in the background while people connect in the real world.
+The Band works alongside the SYNC ecosystem using proximity detection and subtle feedback, allowing users to discover opportunities around them without constantly checking their phones.
 
----
-
-# 🎥 Short Working Demo
-
-Our demo shows the core SYNC experience:
-
-**Create Profile → Set Intent → Discover Someone Nearby → Request SYNC → Accept → Connect → Chat**
-
-### Demo Video
-
-> 🎥 **Demo link:** ADD_YOUR_DEMO_VIDEO_LINK_HERE
-
----
-
-# 🚀 Build & Run Instructions
-
-## Requirements
-
-Before running SYNC locally, make sure you have:
-
-* Node.js
-* npm
-* Git
-
-## 1. Clone the repository
-
-```bash
-git clone https://github.com/StellaLeoni2008/sync-connect.git
-```
-
-## 2. Enter the project
-
-```bash
-cd sync-connect
-```
-
-## 3. Install dependencies
-
-```bash
-npm install
-```
-
-## 4. Start the development server
-
-```bash
-npm run dev
-```
-
-Open the local URL displayed in your terminal.
-
----
-
-## 🛠 Tech Stack
-
-SYNC was built using:
-
-* React 19
-* TypeScript
-* TanStack Start
-* TanStack Router
-* TanStack Query
-* Vite
-* Tailwind CSS
-* Supabase
-* Radix UI
-* Lucide React
-
----
-
-## 💻 Available Commands
-
-Start development:
-
-```bash
-npm run dev
-```
-
-Create a production build:
-
-```bash
-npm run build
-```
-
-Preview the production build:
-
-```bash
-npm run preview
-```
-
-Run ESLint:
-
-```bash
-npm run lint
-```
-
----
-
-## 💡 Why SYNC?
-
-Most social platforms are designed to keep people looking at a screen.
-
-**SYNC is designed to get people off of it.**
-
-Instead of scrolling through hundreds of profiles, SYNC helps you discover the person who might already be standing nearby.
+> **Looks like an accessory. Built for real connections.**
 
 ---
 
 ## 🔮 What's Next?
 
-Future versions of SYNC could include:
-
-* SYNC Points for meaningful real-world connections
-* Rewards and achievements
-* Smarter AI-powered matching
-* SYNC Band integration
-* Event-specific discovery
-* Improved proximity technology
-* Community experiences
+* ⚡ **SYNC Points** — earn points through meaningful real-world connections
+* 🏆 Rewards and achievements
+* 🧠 Smarter AI-powered matching
+* ⌚ SYNC Band integration
+* 📅 Event-specific discovery
+* 📡 Improved proximity technology
+* 🌎 Larger SYNC communities
 
 Our goal is to replace passive scrolling with something more meaningful:
 
@@ -205,12 +191,17 @@ Our goal is to replace passive scrolling with something more meaningful:
 
 <div align="center">
 
-# ⚡ SYNC
+### ⚡ SYNC
 
 ### You don't have to scroll to find the right people.
 
-### They're already here.
+**They're already here.**
 
-**Real people. Real proximity. Real connection.**
+*Real people. Real proximity. Real connection.*
+
+<br><br>
+
+**Built for HackWesTX 2026 — Beyond the Feed**
 
 </div>
+
