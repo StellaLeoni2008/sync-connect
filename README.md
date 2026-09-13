@@ -5,11 +5,6 @@
 ### Stop scrolling. Start connecting.
 **SYNC helps you discover the right people around you based on proximity, skills, interests, and what you're looking for right now.**
 
-
-### 🏆 Built for HackWesTX 2026 — Beyond the Feed
-
-**Texas Tech University · 2026**
-
 <br>
 
 ### 🔗 Project Links
@@ -199,7 +194,8 @@ Our goal is to replace passive scrolling with something more meaningful:
 
 <br><br>
 
-**Built for HackWesTX 2026 — Beyond the Feed**
+### 🏆 Built for HackWesTX 2026 — Beyond the Feed
 
+**Texas Tech University · 2026**
 </div>
 
