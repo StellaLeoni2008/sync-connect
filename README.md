@@ -1,5 +1,6 @@
 <div align="center">
 <img width="1774" height="887" alt="image" src="https://github.com/user-attachments/assets/6a4e6c6a-73df-40ff-9376-cb56aac6fc40" />
+   
 ### Stop scrolling. Start connecting.
 
 **SYNC helps you discover the right people around you based on proximity, skills, interests, and what you're looking for right now.**
