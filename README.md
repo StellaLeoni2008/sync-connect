@@ -8,8 +8,6 @@
 
 </div>
 
----
-
 ## 🌎 What is SYNC?
 
 The person you're looking for might already be in the same room.
