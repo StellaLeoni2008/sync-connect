@@ -5,7 +5,6 @@
 ### Stop scrolling. Start connecting.
 **SYNC helps you discover the right people around you based on proximity, skills, interests, and what you're looking for right now.**
 
-<br>
 
 ### 🏆 Built for HackWesTX 2026 — Beyond the Feed
 
