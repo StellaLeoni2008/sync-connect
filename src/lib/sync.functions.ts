@@ -387,6 +387,8 @@ export const requestSync = createServerFn({ method: "POST" })
         body: reason,
         match_id: matchId,
       });
+      const { pushToUser } = await import("@/lib/push.server");
+      await pushToUser(data.userId, "SYNC_REQUEST", { title: "Someone nearby wants to sync", body: reason, url: "/sync", tag: `request-${matchId}` });
     }
 
     await supabaseAdmin.from("match_responses").upsert({ match_id: matchId, user_id: context.userId, response: "INTERESTED" }, { onConflict: "match_id,user_id" });
@@ -435,6 +437,32 @@ export const respondToSyncRequest = createServerFn({ method: "POST" })
       .from("match_responses")
       .upsert({ match_id: data.matchId, user_id: context.userId, response: data.accept ? "INTERESTED" : "NOT_NOW" }, { onConflict: "match_id,user_id" });
     if (error) throw new Error(error.message);
-    const { data: match } = await context.supabase.from("match_candidates").select("status").eq("id", data.matchId).maybeSingle();
+    const { data: match } = await context.supabase
+      .from("match_candidates")
+      .select("status,user_a_id,user_b_id")
+      .eq("id", data.matchId)
+      .maybeSingle();
+
+    if (data.accept && match) {
+      const otherId = match.user_a_id === context.userId ? match.user_b_id : match.user_a_id;
+      const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+      const { data: me } = await supabaseAdmin.from("profiles").select("name").eq("id", context.userId).maybeSingle();
+      const mutual = match.status === "MUTUAL";
+      await supabaseAdmin.from("notifications").insert({
+        user_id: otherId,
+        kind: mutual ? "MUTUAL_SYNC" : "SYNC_ACCEPTED",
+        title: mutual ? "It’s a SYNC" : "Your sync request was accepted",
+        body: `${me?.name ?? "Someone"} said yes. You can message each other now.`,
+        match_id: data.matchId,
+      });
+      const { pushToUser } = await import("@/lib/push.server");
+      await pushToUser(otherId, mutual ? "MUTUAL_SYNC" : "SYNC_ACCEPTED", {
+        title: mutual ? "It’s a SYNC" : "Your sync request was accepted",
+        body: `${me?.name ?? "Someone"} said yes. You can message each other now.`,
+        url: "/connections",
+        tag: `accepted-${data.matchId}`,
+      });
+    }
+
     return { status: match?.status ?? null };
   });
