@@ -6,6 +6,7 @@
 **SYNC helps you discover the right people around you based on proximity, skills, interests, and what you're looking for right now.**
 
 <br>
+
 ### 🏆 2nd Place Overall — HackWesTX 2026
 **Beyond the Feed · Texas Tech University**
 
