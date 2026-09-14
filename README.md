@@ -197,13 +197,13 @@ Our goal is to replace passive scrolling with something more meaningful:
 *Real people. Real proximity. Real connection.*
 
 <br><br>
-
+</div>
 
 ---
 
 ## Authors
 
-| [<img loading="lazy" src="https://avatars.githubusercontent.com/u/237313711?v=4" width=115><br><sub>Stella Leoni</sub>](https://github.com/StellaLeoni2008) | [<img loading="lazy" src="https://avatars.githubusercontent.com/u/200810883?v=4" width=115><br><sub>João Mafia</sub>](https://github.com/JoaoMafia) | [<img loading="lazy" src="https://avatars.githubusercontent.com/u/328159134?v=4" width=115><br><sub>Davi Cioban</sub>](https://github.com/Davi-Cioban) | [<img loading="lazy" src="https://avatars.githubusercontent.com/u/237313711?v=4" width=115><br><sub>Stella Leoni</sub>](https://github.com/StellaLeoni2008) |
+| [<img loading="lazy" src="https://avatars.githubusercontent.com/u/237313711?v=4" width=115><br><sub>Stella Leoni</sub>](https://github.com/StellaLeoni2008) | [<img loading="lazy" src="https://avatars.githubusercontent.com/u/200810883?v=4" width=115><br><sub>João Mafia</sub>](https://github.com/JoaoMafia) | [<img loading="lazy" src="https://avatars.githubusercontent.com/u/328159134?v=4" width=115><br><sub>Davi Cioban</sub>](https://github.com/Davi-Cioban) | [<img loading="lazy" src="https://avatars.githubusercontent.com/u/328661936?v=4" width=115><br><sub>Bernardo Moyses</sub>](https://github.com/bernardomoyses-sketch) |
 | :---: | :---: | :---: | :---: |
 
 ---
