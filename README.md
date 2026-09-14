@@ -7,8 +7,8 @@
 
 <br>
 
-## 🏆 2nd Place Overall — HackWesTX 2026
-**Beyond the Feed · Texas Tech University**
+## 🏆 2nd Place Overall · HackWesTX 2026
+**Beyond the Feed - Texas Tech University**
 
 <br> 
 
