@@ -8,7 +8,7 @@
 <br>
 
 ## 🏆 2nd Place Overall · HackWesTX 2026
-**Beyond the Feed - Texas Tech University**
+### Beyond the Feed - Texas Tech University**
 
 <br> 
 
@@ -197,7 +197,7 @@ Our goal is to replace passive scrolling with something more meaningful:
 *Real people. Real proximity. Real connection.*
 
 <br><br>
-<\div> 
+
 
 ---
 
