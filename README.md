@@ -6,14 +6,15 @@
 **SYNC helps you discover the right people around you based on proximity, skills, interests, and what you're looking for right now.**
 
 <br>
+### 🏆 2nd Place Overall — HackWesTX 2026
+**Beyond the Feed · Texas Tech University**
 
 ### 🔗 Project Links
 
 🌐 **[Try SYNC Live](https://syncconnect.lovable.app)**
 
-🏆 **[View SYNC on Devpost](https://devpost.com/software/sync-s87agx?_gl=1*u1nglz*_gcl_au*MTUxNTk2NzYzNy4xNzg5MzI5MjY0*_ga*Mzc1OTQ0NzkxLjE3ODkzMjkyNjQ.*_ga_0YHJK3Y10M*czE3ODkzNDU5NTkkbzIkZzEkdDE3ODkzNDY2OTgkajYwJGwwJGgw)**
+💻 **[View SYNC on Devpost](https://devpost.com/software/sync-s87agx?_gl=1*u1nglz*_gcl_au*MTUxNTk2NzYzNy4xNzg5MzI5MjY0*_ga*Mzc1OTQ0NzkxLjE3ODkzMjkyNjQ.*_ga_0YHJK3Y10M*czE3ODkzNDU5NTkkbzIkZzEkdDE3ODkzNDY2OTgkajYwJGwwJGgw)**
 
-💻 **[View Source Code on GitHub](https://github.com/StellaLeoni2008/sync-connect)**
 
 </div>
 
