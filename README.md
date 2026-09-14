@@ -197,9 +197,25 @@ Our goal is to replace passive scrolling with something more meaningful:
 *Real people. Real proximity. Real connection.*
 
 <br><br>
+<\div> 
 
-### 🏆 Built for HackWesTX 2026 — Beyond the Feed
+---
 
-**Texas Tech University · 2026**
-</div>
+## Authors
+
+| [<img loading="lazy" src="https://avatars.githubusercontent.com/u/237313711?v=4" width=115><br><sub>Stella Leoni</sub>](https://github.com/StellaLeoni2008) |
+| :---: |
+| [<img loading="lazy" src="https://avatars.githubusercontent.com/u/237313711?v=4" width=115><br><sub>Stella Leoni</sub>](https://github.com/StellaLeoni2008) |
+| :---: |
+| [<img loading="lazy" src="https://avatars.githubusercontent.com/u/237313711?v=4" width=115><br><sub>Stella Leoni</sub>](https://github.com/StellaLeoni2008) |
+| :---: |
+| [<img loading="lazy" src="https://avatars.githubusercontent.com/u/237313711?v=4" width=115><br><sub>Stella Leoni</sub>](https://github.com/StellaLeoni2008) |
+| :---: |
+
+---
+
+<p align="right">
+09/13/2026 - 2nd Place Overall · HackWesTX 2026
+</p>
+
 
